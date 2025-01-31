@@ -173,7 +173,7 @@ const filterCards = () => {
   } else {
     const temp = searchQuery.value.toLowerCase().replace("你", "妳");
     filteredCards.value = cardsData.filter((card) =>
-      card.text.replace("你", "妳").includes(temp)
+      card.text.toLowerCase().replace("你", "妳").includes(temp)
     );
   }
   currentChunk = 0;
