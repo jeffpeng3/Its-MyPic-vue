@@ -9,7 +9,7 @@
         <v-img :src="imgUrl" :style="{ maxHeight: '70vh', objectFit: 'contain' }" />
         <v-card-actions>
             <v-btn @click="downloadImage">下載</v-btn>
-            <v-btn @click="copyImage">複製</v-btn>
+            <!-- <v-btn @click="copyImage">複製</v-btn> -->
             <v-card-text>{{ text }}</v-card-text>
         </v-card-actions>
     </v-card>
@@ -50,11 +50,8 @@ const copyImage = async () => {
   try {
     const response = await fetch(imgUrl.value);
     const blob = await response.blob();
-    await navigator.clipboard.write([
-      new ClipboardItem({
-        [blob.type]: blob,
-      }),
-    ]);
+    const item = new ClipboardItem({ [`web ${blob.type}`]: blob });
+    await navigator.clipboard.write([item]);
     alert('Image copied to clipboard');
   } catch (error) {
     console.error('Failed to copy image: ', error);
