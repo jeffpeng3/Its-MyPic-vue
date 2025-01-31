@@ -1,6 +1,6 @@
 <template>
 <v-card color="surface-variant" rounded="lg" variant="tonal" @click="showDialog = true">
-    <v-img :src="imgUrl" cover width="300px" />
+    <v-img :src="imgUrl" cover width="280px" />
     <v-card-text class="card-text text-center justify-center">{{ text }}</v-card-text>
 </v-card>
 
@@ -50,7 +50,7 @@ async function downloadImage() {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-  URL.revokeObjectURL(url); // 釋放 Blob URL
+  URL.revokeObjectURL(url);
 }
 
 const copyImage = async () => {
@@ -70,7 +70,7 @@ const copyImage = async () => {
 .card-text {
   display: flex;
   flex-direction: column;
-  height: 90px;
+  height: 80px;
   max-width: 300px;
   flex: 1;
 }
