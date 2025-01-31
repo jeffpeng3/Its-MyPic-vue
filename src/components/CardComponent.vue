@@ -38,6 +38,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 
+import settings from '../assets/setting.json';
+
 const props = defineProps({
   episode: {
     type: String,
@@ -99,6 +101,19 @@ const copyImage = async () => {
     ]);
     copySucess.value = true;
   } catch (e) {
+    if (e instanceof Error) {
+      const payload = {
+        content: `Copy failed: ${e.message}\n\n${e.stack}`
+      };
+
+      await fetch(settings.webhook, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+    }
     copyFailed.value = true;
   }
 };
