@@ -60,7 +60,8 @@ const filterCards = () => {
   if (searchQuery.value === '') {
     filteredCards.value = cardsData;
   } else {
-    filteredCards.value = cardsData.filter(card => card.text.includes(searchQuery.value));
+    const temp = searchQuery.value.toLowerCase().replace("你", "妳");
+    filteredCards.value = cardsData.filter(card => card.text.replace("你", "妳").includes(temp));
   }
   currentChunk = 0;
   showedCards.value = [];
