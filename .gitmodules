@@ -1,0 +1,3 @@
+[submodule "src/assets/data"]
+	path = src/assets/data
+	url = https://github.com/jeffpeng3/MyPicDB.git
