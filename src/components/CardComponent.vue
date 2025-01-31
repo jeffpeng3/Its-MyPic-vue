@@ -39,12 +39,19 @@ const baseUrl = 'https://media.githubusercontent.com/media/jeffpeng3/MyPicDB/ass
 const imgUrl = computed(() => `${baseUrl}${props.episode}_${props.frame_start}.jpg`);
 const showDialog = ref(false);
 
-const downloadImage = () => {
+async function downloadImage() {
+  const response = await fetch(imgUrl.value);
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+
   const link = document.createElement('a');
-  link.href = imgUrl.value;
-  link.download = `${props.episode}_${props.frame_start}.jpg`;
+  link.href = url;
+  link.download = `${props.text}.jpg`;
+  document.body.appendChild(link);
   link.click();
-};
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url); // 釋放 Blob URL
+}
 
 const copyImage = async () => {
   try {
