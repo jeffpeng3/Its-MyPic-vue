@@ -16,7 +16,7 @@
           label="搜尋"
           variant="outlined"
           class="short-search"
-          style="margin: 0 30%"
+          style="margin: 0 20%"
           @keyup.enter="filterCards"
           @input="debounceFilterCards"
         />
