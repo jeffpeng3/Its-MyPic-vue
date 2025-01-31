@@ -1,24 +1,44 @@
 <template>
-<v-card color="surface-variant" rounded="lg" variant="tonal" @click="showDialog = true">
-    <v-img :src="imgUrl" cover width="280px" />
-    <v-card-text class="card-text text-center justify-center">{{ text }}</v-card-text>
-</v-card>
+  <v-card
+    color="surface-variant"
+    rounded="lg"
+    variant="tonal"
+    @click="showDialog = true"
+  >
+    <v-img
+      :src="imgUrl"
+      cover
+      width="280px"
+    />
+    <v-card-text class="card-text text-center justify-center">
+      {{ text }}
+    </v-card-text>
+  </v-card>
 
-<v-dialog v-model="showDialog" max-width="600px" :style="{ maxHeight: '90vh' }">
+  <v-dialog
+    v-model="showDialog"
+    max-width="600px"
+    :style="{ maxHeight: '90vh' }"
+  >
     <v-card>
-        <v-img :src="imgUrl" :style="{ maxHeight: '70vh', objectFit: 'contain' }" />
-        <v-card-actions>
-            <v-btn @click="downloadImage">下載</v-btn>
-            <!-- <v-btn @click="copyImage">複製</v-btn> -->
-            <v-card-text>{{ text }}</v-card-text>
-        </v-card-actions>
+      <v-img
+        :src="imgUrl"
+        :style="{ maxHeight: '70vh', objectFit: 'contain' }"
+      />
+      <v-card-actions>
+        <v-btn @click="downloadImage">
+          下載
+        </v-btn>
+        <!-- <v-btn @click="copyImage">複製</v-btn> -->
+        <v-card-text>{{ text }}</v-card-text>
+      </v-card-actions>
     </v-card>
-</v-dialog>
+  </v-dialog>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import type { Slot } from 'vue';
+// import type { Slot } from 'vue';
 
 const props = defineProps({
   episode: {
@@ -53,17 +73,17 @@ async function downloadImage() {
   URL.revokeObjectURL(url);
 }
 
-const copyImage = async () => {
-  try {
-    const response = await fetch(imgUrl.value);
-    const blob = await response.blob();
-    const item = new ClipboardItem({ [`web ${blob.type}`]: blob });
-    await navigator.clipboard.write([item]);
-    alert('Image copied to clipboard');
-  } catch (error) {
-    console.error('Failed to copy image: ', error);
-  }
-};
+// const copyImage = async () => {
+//   try {
+//     const response = await fetch(imgUrl.value);
+//     const blob = await response.blob();
+//     const item = new ClipboardItem({ [`web ${blob.type}`]: blob });
+//     await navigator.clipboard.write([item]);
+//     alert('Image copied to clipboard');
+//   } catch (error) {
+//     console.error('Failed to copy image: ', error);
+//   }
+// };
 </script>
 
 <style scoped>
