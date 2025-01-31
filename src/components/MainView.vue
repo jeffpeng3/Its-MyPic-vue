@@ -18,6 +18,7 @@
           class="short-search"
           style="margin: 0 20%"
           @keyup.enter="filterCards"
+          @click:clear="clearMessage"
           @input="debounceFilterCards"
         />
       </div>
@@ -154,6 +155,11 @@ let debounceTimeout: number;
 const debounceFilterCards = () => {
   clearTimeout(debounceTimeout);
   debounceTimeout = setTimeout(filterCards, 500);
+};
+
+const clearMessage = () => {
+  searchQuery.value = "";
+  filterCards();
 };
 
 const filterCards = () => {
