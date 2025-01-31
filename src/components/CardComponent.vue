@@ -35,7 +35,7 @@ const props = defineProps({
   },
 });
 
-const baseUrl = 'https://media.githubusercontent.com/media/jeffpeng3/MyPicDB/assets/images/';
+const baseUrl = 'https://mygodata.0m0.uk/images/';
 const imgUrl = computed(() => `${baseUrl}${props.episode}_${props.frame_start}.jpg`);
 const showDialog = ref(false);
 
