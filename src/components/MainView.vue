@@ -1,12 +1,14 @@
 <template>
   <v-container class="fill-height" fluid>
     <v-responsive class="align-start fill-height mx-auto">
-
       <div class="text-center align-center justify-center top-0">
-        <div class="py-4" />
-        <h1 class="text-h4 font-weight-bold">MyGO Ave Mujica 截圖搜尋器</h1>
-        <div class="py-4" />
-        <v-text-field clearable label="搜尋" variant="outlined" class="short-search" style="margin: 0 30%;"
+
+        <div class="text-h5 mx-auto font-weight-bold text-center text-truncate">
+          MyGO Ave Mujica
+          截圖搜尋器
+        </div>
+        <div class="py-2" />
+        <v-text-field clearable label="搜尋" variant="outlined" class="short-search" style="margin: 0 30%"
           v-model="searchQuery" @keyup.enter="filterCards" @input="debounceFilterCards" />
       </div>
 
@@ -17,12 +19,46 @@
       </v-row>
     </v-responsive>
   </v-container>
+  <v-footer app height="50px">
+    <v-container>
+      <v-row class="text-center justify-center">
+        <v-btn variant="outlined" class="text-center justify-center">
+          <v-icon>mdi-github</v-icon>
+          看看其他地方
+          <v-menu activator="parent" location="center">
+            <v-list>
+
+              <v-list-item target="_blank" :key="1" :value="1" append-icon="mdi-open-in-new"
+                href="https://github.com/jeffpeng3/PowerToys-Run-Its-MyPic">
+                <v-list-item-title>PowerToys-Run Plugin</v-list-item-title>
+              </v-list-item>
+
+              <v-list-item target="_blank" :key="2" :value="2" append-icon="mdi-open-in-new"
+                href="https://github.com/jeffpeng3/krunner-Its-MyPic">
+                <v-list-item-title>Krunner Plugin</v-list-item-title>
+              </v-list-item>
+
+              <v-list-item target="_blank" :key="3" :value="3" append-icon="mdi-open-in-new"
+                href="https://github.com/jeffpeng3/Its-MyPic-vue">
+                <v-list-item-title>這個網頁的原始碼</v-list-item-title>
+              </v-list-item>
+
+              <v-list-item target="_blank" :key="4" :value="4" append-icon="mdi-open-in-new"
+                href="https://github.com/jeffpeng3/MyPicDB">
+                <v-list-item-title>mygo系列的截圖資料</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </v-btn>
+      </v-row>
+    </v-container>
+  </v-footer>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
-import cardsData from '../assets/data/data.json';
-const searchQuery = ref('');
+import { ref, onMounted, onUnmounted } from "vue";
+import cardsData from "../assets/data/data.json";
+const searchQuery = ref("");
 const showedCards = ref<typeof cardsData>([]);
 const filteredCards = ref<typeof cardsData>(cardsData);
 const chunkSize = 20;
@@ -37,7 +73,7 @@ const loadNextChunk = () => {
 
 onMounted(() => {
   loadNextChunk();
-  window.addEventListener('scroll', handleScroll);
+  window.addEventListener("scroll", handleScroll);
 });
 
 const handleScroll = () => {
@@ -47,7 +83,7 @@ const handleScroll = () => {
 };
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll);
+  window.removeEventListener("scroll", handleScroll);
 });
 
 let debounceTimeout: number;
@@ -57,11 +93,13 @@ const debounceFilterCards = () => {
 };
 
 const filterCards = () => {
-  if (searchQuery.value === '') {
+  if (searchQuery.value === "") {
     filteredCards.value = cardsData;
   } else {
     const temp = searchQuery.value.toLowerCase().replace("你", "妳");
-    filteredCards.value = cardsData.filter(card => card.text.replace("你", "妳").includes(temp));
+    filteredCards.value = cardsData.filter((card) =>
+      card.text.replace("你", "妳").includes(temp)
+    );
   }
   currentChunk = 0;
   showedCards.value = [];
