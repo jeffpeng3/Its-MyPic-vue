@@ -10,6 +10,10 @@
     <v-card>
       <v-img :src="imgUrl" :style="{ maxHeight: '70vh', objectFit: 'contain' }" />
       <v-card-actions>
+        <v-btn>
+          回報
+          <ReportDialog :fileName="imgUrl" :text="text"/>
+        </v-btn>
         <v-btn @click="downloadImage">
           下載
         </v-btn>

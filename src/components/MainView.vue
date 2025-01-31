@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar density="prominent"  >
+  <v-app-bar density="prominent">
     <v-container>
       <div class="text-h5 mx-auto font-weight-bold text-center text-truncate">
         MyGO Ave Mujica
@@ -24,6 +24,12 @@
   <v-footer app height="50px">
     <v-container fluid>
       <v-row>
+        <v-col cols="auto">
+          <v-btn variant="outlined" class="text-center">
+            回報問題
+            <ReportDialog />
+          </v-btn>
+        </v-col>
         <v-col>
           <v-btn variant="outlined" class="text-center">
             <v-icon>mdi-github</v-icon>
@@ -63,13 +69,11 @@
 
 <script setup lang="ts">
 import { useTheme } from 'vuetify'
-const theme = useTheme()
+const theme = useTheme();
 function toggleTheme() {
   theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
   localStorage.setItem("theme", theme.global.name.value);
 }
-
-
 
 
 import { ref, onMounted, onUnmounted } from "vue";
