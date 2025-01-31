@@ -12,7 +12,7 @@
       <v-card-actions>
         <v-btn>
           回報
-          <ReportDialog :fileName="imgUrl" :text="text"/>
+          <ReportDialog :fileName="imgUrl" :text="text" />
         </v-btn>
         <v-btn @click="downloadImage">
           下載
@@ -77,46 +77,49 @@ async function downloadImage() {
 
 const copyImage = async () => {
   try {
-    let img = new Image();
-    img.src = imgUrl.value;
-    img.crossOrigin = 'Anonymous';
-    img.style.display = 'none';
-    await new Promise((resolve) => {
-      img.onload = resolve;
-    });
+    const item = new ClipboardItem({
+      'image/png': (async () => {
 
-    let canvas = document.createElement('canvas');
-    let ctx = canvas.getContext('2d') ?? new CanvasRenderingContext2D();
-    canvas.width = img.width;
-    canvas.height = img.height;
-    ctx.drawImage(img, 0, 0);
-    const blobUrl = canvas.toDataURL("image/png");
+        let img = new Image();
+        img.src = imgUrl.value;
+        img.crossOrigin = 'Anonymous';
+        img.style.display = 'none';
+        await new Promise((resolve) => {
+          img.onload = resolve;
+        });
 
-    const data = await fetch(blobUrl);
-    const blob = await data.blob();
-    await navigator.clipboard.write([
-      new window.ClipboardItem({
-        [blob.type]: blob
-      })
-    ]);
+        let canvas = document.createElement('canvas');
+        let ctx = canvas.getContext('2d') ?? new CanvasRenderingContext2D();
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        const blobUrl = canvas.toDataURL("image/png");
+
+        const data = await fetch(blobUrl);
+        return await data.blob();
+      }
+      )(),
+    })
+    await navigator.clipboard.write([item])
     copySucess.value = true;
-  } catch (e) {
-    if (e instanceof Error) {
-      const payload = {
-        content: `Copy failed: ${e.message}\n\n${e.stack}`
-      };
 
-      await fetch(settings.webhook, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
-    }
+  } catch (e: any) {
+    const payload = {
+      content: `Copy failed:\n ${e.message}\n\n${e.stack}`
+    };
+
+    fetch(settings.webhook, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
     copyFailed.value = true;
+    console.log('Error: ', e.message)
   }
-};
+}
+
 </script>
 
 <style scoped>
