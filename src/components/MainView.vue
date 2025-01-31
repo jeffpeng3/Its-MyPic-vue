@@ -11,7 +11,7 @@
       </div>
 
       <v-row class="text-center justify-center">
-        <v-col cols="auto" v-for="(card, index) in filteredCards" :key="index">
+        <v-col cols="auto" v-for="(card, index) in showedCards" :key="index">
           <CardComponent :frame_start="card.frame_start" :episode="card.episode" :text="card.text" />
         </v-col>
       </v-row>
@@ -23,14 +23,15 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import cardsData from '../assets/data/data.json';
 const searchQuery = ref('');
-const filteredCards = ref<typeof cardsData>([]);
+const showedCards = ref<typeof cardsData>([]);
+const filteredCards = ref<typeof cardsData>(cardsData);
 const chunkSize = 20;
 let currentChunk = 0;
 
 const loadNextChunk = () => {
   const start = currentChunk * chunkSize;
   const end = start + chunkSize;
-  filteredCards.value.push(...cardsData.slice(start, end));
+  showedCards.value.push(...filteredCards.value.slice(start, end));
   currentChunk++;
 };
 
@@ -56,6 +57,13 @@ const debounceFilterCards = () => {
 };
 
 const filterCards = () => {
-  filteredCards.value = cardsData.filter(card => card.text.includes(searchQuery.value));
+  if (searchQuery.value === '') {
+    filteredCards.value = cardsData;
+  } else {
+    filteredCards.value = cardsData.filter(card => card.text.includes(searchQuery.value));
+  }
+  currentChunk = 0;
+  showedCards.value = [];
+  loadNextChunk();
 };
 </script>
