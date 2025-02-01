@@ -21,6 +21,7 @@
       </v-row>
     </v-responsive>
   </v-container>
+
   <v-footer app height="50px">
     <v-container fluid>
       <v-row>
