@@ -2,8 +2,7 @@
   <v-app-bar density="prominent">
     <v-container>
       <div class="text-h5 mx-auto font-weight-bold text-center text-truncate">
-        MyGO Ave Mujica
-        截圖搜尋器
+        MyGO Mujica 截圖搜尋器
       </div>
       <v-col class="text-center">
         <v-text-field v-model="searchQuery" single-line hide-details clearable label="搜尋" variant="outlined"
