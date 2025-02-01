@@ -4,8 +4,8 @@
     <v-card>
       <v-card-title>回報問題</v-card-title>
       <v-card-text>
-        <v-text-field label="你遭遇到的問題" v-model="issue" outlined></v-text-field>
-        <v-text-field label="你的聯絡方式" v-model="contact" outlined></v-text-field>
+        <v-text-field label="你遭遇到的問題(選填)" v-model="issue" outlined></v-text-field>
+        <v-text-field label="你的聯絡方式(選填)" v-model="contact" outlined></v-text-field>
       </v-card-text>
       <v-card-actions>
         <v-btn @click="submitIssue">送出</v-btn>
