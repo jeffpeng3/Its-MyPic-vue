@@ -1,17 +1,11 @@
 <template>
-  <v-footer app height="50px">
+  <v-footer app>
     <v-container fluid>
       <v-row>
-        <v-col cols="auto">
-          <v-btn variant="outlined" class="text-center">
-            回報問題
-            <ReportDialog />
-          </v-btn>
-        </v-col>
+
         <v-col>
-          <v-btn variant="outlined" class="text-center">
-            <v-icon>mdi-github</v-icon>
-            看看其他地方
+          <v-btn variant="outlined" size="small" class="text-center">
+            其他連結
             <v-menu activator="parent" location="center">
               <v-list>
                 <v-list-item :key="1" target="_blank" :value="1" append-icon="mdi-open-in-new"
@@ -36,9 +30,17 @@
               </v-list>
             </v-menu>
           </v-btn>
+          <v-btn variant="outlined" size="small" class="text-center">
+            回報問題
+            <ReportDialog />
+          </v-btn>
+          <v-btn variant="outlined" size="small" class="text-center" :href="`https://forms.gle/WzW9PZwUU6gqHZko7`"
+            target="_blank">
+            <v-btn-title>投稿</v-btn-title>
+          </v-btn>
         </v-col>
         <v-col cols="1">
-          <v-icon icon="mdi-theme-light-dark" @click="toggleTheme" />
+          <v-icon size="small" icon="mdi-theme-light-dark" @click="toggleTheme" />
         </v-col>
       </v-row>
     </v-container>
