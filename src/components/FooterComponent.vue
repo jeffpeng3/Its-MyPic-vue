@@ -36,7 +36,7 @@
           </v-btn>
           <v-btn variant="outlined" size="small" class="text-center" :href="`https://forms.gle/WzW9PZwUU6gqHZko7`"
             target="_blank">
-            <v-btn-title>投稿</v-btn-title>
+            投稿
           </v-btn>
         </v-col>
         <v-col cols="1">
