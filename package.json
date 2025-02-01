@@ -12,7 +12,6 @@
     "lint": "eslint . --fix"
   },
   "dependencies": {
-    "@mdi/font": "7.4.47",
     "core-js": "^3.37.1",
     "roboto-fontface": "*",
     "vue": "^3.4.31",
@@ -20,6 +19,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.14.0",
+    "@mdi/js": "^7.4.47",
     "@tsconfig/node22": "^22.0.0",
     "@types/node": "^22.13.0",
     "@vitejs/plugin-vue": "^5.1.4",
