@@ -15,15 +15,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
-import cardsData from "../assets/data/data.json";
+const cardsDataLoader = () => import('../assets/data/data.json')
+type CardData = {
+  segment_id: number;
+  frame_start: number;
+  frame_end: number;
+  episode: string;
+  text: string;
+};
+
 const updateSearchQuery = (query: string) => {
   filterCards(query);
 };
 
+import { ref, onMounted, onUnmounted } from "vue";
+// import cardsData from "../assets/data/data.json";
+
+let cardsData: CardData[] = [];
 const searchQuery = ref("");
-const showedCards = ref<typeof cardsData>([]);
-const filteredCards = ref<typeof cardsData>(cardsData);
+const showedCards = ref<CardData[]>([]);
+const filteredCards = ref(cardsData);
 const chunkSize = 20;
 let currentChunk = 0;
 
@@ -34,20 +45,26 @@ const loadNextChunk = () => {
   currentChunk++;
 };
 
-onMounted(() => {
-  loadNextChunk();
-  window.addEventListener("scroll", handleScroll);
-});
-
 const handleScroll = () => {
   if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
     loadNextChunk();
   }
 };
 
+onMounted(() => {
+  cardsDataLoader().then((module) => {
+    cardsData = module.default;
+    filteredCards.value = cardsData;
+    loadNextChunk();
+  });
+  window.addEventListener("scroll", handleScroll);
+});
+
 onUnmounted(() => {
   window.removeEventListener("scroll", handleScroll);
 });
+
+
 
 const filterCards = (query: string) => {
   if (query === "") {
