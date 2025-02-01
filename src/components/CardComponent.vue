@@ -30,7 +30,7 @@
   </v-snackbar>
   <v-snackbar v-model="copyFailed" :timeout=2000 class="text-center" rounded="pill">
     <div class="text-h6 mx-auto font-weight-bold text-center text-truncate">
-      複製失敗
+      失敗 請按右下角回報手機型號/瀏覽器
     </div>
   </v-snackbar>
 </template>
