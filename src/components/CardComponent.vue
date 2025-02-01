@@ -56,7 +56,8 @@ const props = defineProps({
 });
 
 const baseUrl = 'https://mygodata.0m0.uk/images/';
-const imgUrl = computed(() => `${baseUrl}${props.episode}_${props.frame_start}.jpg`);
+// const imgUrl = computed(() => `${baseUrl}${props.episode}_${props.frame_start}.jpg`);
+const imgUrl = ref(`${baseUrl}${props.episode}_${props.frame_start}.jpg`);
 const showDialog = ref(false);
 const copySucess = ref(false);
 const copyFailed = ref(false);

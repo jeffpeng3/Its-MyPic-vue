@@ -15,7 +15,7 @@
   <v-container class="fill-height" fluid>
     <v-responsive class="align-start fill-height mx-auto">
       <v-row class="text-center justify-center">
-        <v-col v-for="(card, index) in showedCards" :key="index" cols="auto">
+        <v-col v-for="(card, index) in showedCards" :key="card.segment_id" cols="auto">
           <CardComponent :frame_start="card.frame_start" :episode="card.episode" :text="card.text" />
         </v-col>
       </v-row>
@@ -73,7 +73,7 @@ import { useTheme } from 'vuetify'
 const theme = useTheme();
 function toggleTheme() {
   theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
-  localStorage.setItem("theme", theme.global.name.value);
+  // localStorage.setItem("theme", theme.global.name.value);
 }
 
 
