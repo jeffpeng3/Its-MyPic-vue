@@ -84,7 +84,7 @@ async function downloadImage() {
 
 const copy = async () => {
   try {
-    if ((isFirefox() && isMobile()) || noPermission()) {
+    if (cantCopyImage()) {
       await copyUrl();
     } else {
       await copyImage();
@@ -167,6 +167,10 @@ const isMobile = () => {
 
 const noPermission = () => {
   return false;
+};
+
+const cantCopyImage = () => {
+  return (isFirefox() && isMobile()) || noPermission();
 };
 </script>
 
