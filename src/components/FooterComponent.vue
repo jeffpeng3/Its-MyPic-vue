@@ -4,7 +4,7 @@
       <v-row>
 
         <v-col>
-          <v-btn variant="outlined" size="small" class="text-center">
+          <v-btn variant="text" size="small" class="text-center">
             其他連結
             <v-menu activator="parent" location="center">
               <v-list>
@@ -31,11 +31,11 @@
               </v-list>
             </v-menu>
           </v-btn>
-          <v-btn variant="outlined" size="small" class="text-center">
+          <v-btn variant="text" size="small" class="text-center">
             回報問題
             <ReportDialog />
           </v-btn>
-          <v-btn variant="outlined" size="small" class="text-center" :href="`https://forms.gle/WzW9PZwUU6gqHZko7`"
+          <v-btn variant="text" size="small" class="text-center" :href="`https://forms.gle/WzW9PZwUU6gqHZko7`"
             target="_blank">
             投稿
           </v-btn>
