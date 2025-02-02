@@ -101,26 +101,37 @@ const copyImage = async () => {
       }
       )(),
     })
-    await navigator.clipboard.write([item])
+    await navigator.clipboard.write([item]);
     copySucess.value = true;
-
   } catch (e: any) {
-    const payload = {
-      content: `Copy failed:\n ${e.message}\n\n${e.stack}`
-    };
-
-    fetch(`https://discord.com/api/webhooks/${atob(settings.webhook)}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-    copyFailed.value = true;
-    console.log('Error: ', e.message)
+    try {
+      await navigator.clipboard.writeText(imgUrl.value);
+      console.log('Copied image URL instead:', imgUrl.value);
+      copySucess.value = true;
+      return;
+    } catch (e: any) {
+      console.log('Both copy attempts failed:', e.message);
+      await reportErrorToDiscord(e);
+      copyFailed.value = true;
+    }
   }
 }
 
+async function reportErrorToDiscord(e: any) {
+  const payload = {
+    content: `Copy failed:\n ${e.message}\n\n${e.stack}`
+  };
+
+  try {
+    await fetch(`https://discord.com/api/webhooks/${atob(settings.webhook)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch (fetchError) {
+    console.error('Failed to send error report to Discord:', fetchError);
+  }
+}
 </script>
 
 <style scoped>
