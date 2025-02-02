@@ -32,7 +32,6 @@ import { ref, onMounted, onUnmounted } from "vue";
 // import cardsData from "../assets/data/data.json";
 
 let cardsData: CardData[] = [];
-const searchQuery = ref("");
 const showedCards = ref<CardData[]>([]);
 const filteredCards = ref(cardsData);
 const chunkSize = 20;
@@ -65,7 +64,7 @@ onUnmounted(() => {
 });
 
 // @ts-ignore
-import {ConverterFactory} from 'opencc-js/core'; // primary code
+import { ConverterFactory } from 'opencc-js/core'; // primary code
 // @ts-ignore
 import cn from 'opencc-js/from/cn'; // dictionary
 // @ts-ignore
@@ -77,7 +76,7 @@ const filterCards = (query: string) => {
   if (query === "") {
     filteredCards.value = cardsData;
   } else {
-    const temp:string = converter(query.toLowerCase().replace("你", "妳"));
+    const temp: string = converter(query.toLowerCase().replace("你", "妳"));
     filteredCards.value = cardsData.filter((card) =>
       card.text.toLowerCase().replace("你", "妳").includes(temp)
     );
