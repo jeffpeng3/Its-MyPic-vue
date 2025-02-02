@@ -4,17 +4,16 @@
  * Bootstraps Vuetify and other plugins then mounts the App`
  */
 
-// Plugins
-import { registerPlugins } from '@/plugins'
-
-// Components
+import { ViteSSG } from 'vite-ssg'
 import App from './App.vue'
+// import router from './router'
+import vuetify from './plugins/vuetify'
+import { routes } from 'vue-router/auto-routes'
 
-// Composables
-import { createApp } from 'vue'
-
-const app = createApp(App)
-
-registerPlugins(app)
-
-app.mount('#app')
+export const createApp = ViteSSG(
+  App,
+  { routes: routes },
+  (ctx) => {
+    ctx.app.use(vuetify)
+  }
+)

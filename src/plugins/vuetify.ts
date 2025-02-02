@@ -15,8 +15,6 @@ import 'vuetify/styles'
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
 import { md3 } from 'vuetify/blueprints'
 
-const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
-
 export default createVuetify({
   blueprint: md3,
   icons: {
@@ -27,7 +25,7 @@ export default createVuetify({
     },
   },
   theme: {
-    defaultTheme: prefersDarkScheme ? 'dark' : 'light',
+    defaultTheme: 'dark',
     themes: {
       light: {
         colors: {

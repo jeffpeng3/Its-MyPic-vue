@@ -12,6 +12,10 @@ import { fileURLToPath, URL } from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  ssr: {
+    noExternal: ['vuetify']
+  },
+
   build: {
     rollupOptions: {
       output: {

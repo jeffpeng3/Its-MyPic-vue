@@ -51,8 +51,14 @@
 <script setup lang="ts">
 import { useTheme } from 'vuetify'
 import { mdiOpenInNew, mdiThemeLightDark } from '@mdi/js';
+import { onMounted } from 'vue';
 const theme = useTheme();
 function toggleTheme() {
   theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
 }
+onMounted(() => {
+  if (window.matchMedia("(prefers-color-scheme: light)").matches) {
+    theme.global.name.value = 'light';
+  }
+})
 </script>
