@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "core-js": "^3.37.1",
+    "opencc-js": "^1.0.5",
     "roboto-fontface": "*",
     "vue": "^3.4.31",
     "vuetify": "^3.6.14"

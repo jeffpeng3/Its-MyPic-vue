@@ -64,13 +64,20 @@ onUnmounted(() => {
   window.removeEventListener("scroll", handleScroll);
 });
 
+// @ts-ignore
+import {ConverterFactory} from 'opencc-js/core'; // primary code
+// @ts-ignore
+import cn from 'opencc-js/from/cn'; // dictionary
+// @ts-ignore
+import tw from 'opencc-js/to/tw'; // dictionary
 
+const converter = ConverterFactory(cn, tw);
 
 const filterCards = (query: string) => {
   if (query === "") {
     filteredCards.value = cardsData;
   } else {
-    const temp = query.toLowerCase().replace("你", "妳");
+    const temp:string = converter(query.toLowerCase().replace("你", "妳"));
     filteredCards.value = cardsData.filter((card) =>
       card.text.toLowerCase().replace("你", "妳").includes(temp)
     );
