@@ -25,27 +25,33 @@ type CardData = {
 };
 
 const updateSearchQuery = (query: string) => {
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: "smooth",
+  });
   filterCards(query);
 };
 
 import { ref, onMounted, onUnmounted } from "vue";
-// import cardsData from "../assets/data/data.json";
 
 let cardsData: CardData[] = [];
 const showedCards = ref<CardData[]>([]);
 const filteredCards = ref(cardsData);
-const chunkSize = 20;
-let currentChunk = 0;
+let currentIndex = 0;
 
 const loadNextChunk = () => {
-  const start = currentChunk * chunkSize;
-  const end = start + chunkSize;
-  showedCards.value.push(...filteredCards.value.slice(start, end));
-  currentChunk++;
+  const PreferChunkSize = 20;
+  const cardsPerRow = Math.floor((window.innerWidth - 8) / 304);
+  const rowsToLoad = Math.max(4, Math.floor(PreferChunkSize / cardsPerRow));
+  const end = currentIndex + cardsPerRow * rowsToLoad;
+  showedCards.value.push(...filteredCards.value.slice(currentIndex, end));
+  // console.log(cardsPerRow, rowsToLoad);
+  currentIndex = end;
 };
 
 const handleScroll = () => {
-  if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+  if (1.3 * window.innerHeight + window.scrollY >= document.body.offsetHeight) {
     loadNextChunk();
   }
 };
@@ -81,7 +87,7 @@ const filterCards = (query: string) => {
       card.text.toLowerCase().replace("你", "妳").includes(temp)
     );
   }
-  currentChunk = 0;
+  currentIndex = 0;
   showedCards.value = [];
   loadNextChunk();
 };

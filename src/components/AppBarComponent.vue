@@ -30,11 +30,6 @@ const emitSearchQuery = () => {
 
 const clearMessage = () => {
   searchQuery.value = "";
-  window.scrollTo({
-    top: 0,
-    left: 0,
-    behavior: "smooth",
-  });
   emit('update:searchQuery', searchQuery.value);
 };
 </script>
