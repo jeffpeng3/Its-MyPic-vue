@@ -15,7 +15,6 @@
 </template>
 
 <script setup lang="ts">
-const cardsDataLoader = () => import('../assets/data/data.json')
 type CardData = {
   segment_id: number;
   frame_start: number;
@@ -35,18 +34,25 @@ const updateSearchQuery = (query: string) => {
 
 import { ref, onMounted, onUnmounted } from "vue";
 
-let cardsData: CardData[] = [];
-const showedCards = ref<CardData[]>([]);
+import cardsData from "../assets/data/data.json";
 const filteredCards = ref(cardsData);
-let currentIndex = 0;
 
-const loadNextChunk = () => {
+const calcLoadChunkSize = () => {
   const PreferChunkSize = 20;
   const cardsPerRow = Math.floor((window.innerWidth - 8) / 304);
   const rowsToLoad = Math.max(4, Math.floor(PreferChunkSize / cardsPerRow));
-  const end = currentIndex + cardsPerRow * rowsToLoad;
-  showedCards.value.push(...filteredCards.value.slice(currentIndex, end));
   // console.log(cardsPerRow, rowsToLoad);
+  return cardsPerRow * rowsToLoad;
+};
+let currentIndex = 24;
+
+const showedCards = ref<CardData[]>([...filteredCards.value.slice(0, currentIndex)]);
+
+const loadNextChunk = () => {
+  let count = calcLoadChunkSize();
+  // console.log(count);
+  const end = currentIndex + count;
+  showedCards.value.push(...filteredCards.value.slice(currentIndex, end));
   currentIndex = end;
 };
 
@@ -57,11 +63,6 @@ const handleScroll = () => {
 };
 
 onMounted(() => {
-  cardsDataLoader().then((module) => {
-    cardsData = module.default;
-    filteredCards.value = cardsData;
-    loadNextChunk();
-  });
   window.addEventListener("scroll", handleScroll);
 });
 
