@@ -1,6 +1,6 @@
 <template>
   <v-card color="surface-variant" rounded="lg" variant="tonal" @click="showDialog = true">
-    <v-img :src="imgUrl" cover width="280px" height="157px" :alt="text" />
+    <img :src="imgUrl" cover width="280px" height="157px" :alt="text" />
     <v-card-text class="card-text text-center justify-center">
       {{ text }}
     </v-card-text>
