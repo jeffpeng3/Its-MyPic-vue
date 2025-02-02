@@ -17,7 +17,7 @@
         <v-btn @click="downloadImage">
           下載
         </v-btn>
-        <v-btn @click="copyImage">複製</v-btn>
+        <v-btn @click="copy">複製</v-btn>
         <v-card-text>{{ text }}</v-card-text>
       </v-card-actions>
     </v-card>
@@ -25,7 +25,12 @@
 
   <v-snackbar v-model="copySucess" :timeout=2000 class="text-center" rounded="pill">
     <div class="text-h6 mx-auto font-weight-bold text-center text-truncate">
-      複製成功
+      圖片複製成功
+    </div>
+  </v-snackbar>
+  <v-snackbar v-model="copyUrlInstead" :timeout=2000 class="text-center" rounded="pill">
+    <div class="text-h6 mx-auto font-weight-bold text-center text-truncate">
+      連結複製成功
     </div>
   </v-snackbar>
   <v-snackbar v-model="copyFailed" :timeout=2000 class="text-center" rounded="pill">
@@ -60,6 +65,7 @@ const baseUrl = 'https://mygodata.0m0.uk/images/';
 const imgUrl = ref(`${baseUrl}${props.episode}_${props.frame_start}.jpg`);
 const showDialog = ref(false);
 const copySucess = ref(false);
+const copyUrlInstead = ref(false);
 const copyFailed = ref(false);
 
 async function downloadImage() {
@@ -74,6 +80,30 @@ async function downloadImage() {
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
+}
+
+const copy = async () => {
+  try {
+    if ((isFirefox() && isMobile()) || noPermission()) {
+      await copyUrl();
+    } else {
+      await copyImage();
+    }
+  } catch (e: any) {
+    console.error('Error during copy:', e.message);
+    await copyUrl();
+  }
+}
+
+const copyUrl = async () => {
+  try {
+    await navigator.clipboard.writeText(imgUrl.value);
+    copyUrlInstead.value = true;
+  } catch (e: any) {
+    console.log('Error: ', e.message)
+    copyFailed.value = true;
+    await reportErrorToDiscord(e);
+  }
 }
 
 const copyImage = async () => {
@@ -126,6 +156,18 @@ async function reportErrorToDiscord(e: any) {
     console.error('Failed to send error report to Discord:', fetchError);
   }
 }
+
+const isFirefox = () => {
+  return typeof navigator !== 'undefined' && navigator.userAgent.toLowerCase().includes('firefox');
+};
+
+const isMobile = () => {
+  return typeof navigator !== 'undefined' && navigator.userAgent.toLowerCase().includes('mobile');
+};
+
+const noPermission = () => {
+  return false;
+};
 </script>
 
 <style scoped>
