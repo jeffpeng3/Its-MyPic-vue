@@ -96,14 +96,8 @@ const copy = async () => {
 }
 
 const copyUrl = async () => {
-  try {
-    await navigator.clipboard.writeText(imgUrl.value);
-    copyUrlInstead.value = true;
-  } catch (e: any) {
-    console.log('Error: ', e.message)
-    copyFailed.value = true;
-    await reportErrorToDiscord(e);
-  }
+  await navigator.clipboard.writeText(imgUrl.value);
+  copyUrlInstead.value = true;
 }
 
 const copyImage = async () => {
