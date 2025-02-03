@@ -23,19 +23,9 @@
     </v-card>
   </v-dialog>
 
-  <v-snackbar v-model="copySucess" :timeout=2000 class="text-center" rounded="pill">
+  <v-snackbar v-model="copyResult" :timeout=2000 class="text-center" rounded="pill">
     <div class="text-h6 mx-auto font-weight-bold text-center text-truncate">
-      圖片複製成功
-    </div>
-  </v-snackbar>
-  <v-snackbar v-model="copyUrlInstead" :timeout=2000 class="text-center" rounded="pill">
-    <div class="text-h6 mx-auto font-weight-bold text-center text-truncate">
-      連結複製成功
-    </div>
-  </v-snackbar>
-  <v-snackbar v-model="copyFailed" :timeout=2000 class="text-center" rounded="pill">
-    <div class="text-h6 mx-auto font-weight-bold text-center text-truncate">
-      失敗 請按左下角回報手機型號/瀏覽器
+      {{ snack_text }}
     </div>
   </v-snackbar>
 </template>
@@ -64,10 +54,8 @@ const baseUrl = 'https://mygodata.0m0.uk/images/';
 // const imgUrl = computed(() => `${baseUrl}${props.episode}_${props.frame_start}.jpg`);
 const imgUrl = ref(`${baseUrl}${props.episode}_${props.frame_start}.jpg`);
 const showDialog = ref(false);
-const copySucess = ref(false);
-const copyUrlInstead = ref(false);
-const copyFailed = ref(false);
-
+const copyResult = ref(false);
+const snack_text = ref('連結複製成功');
 async function downloadImage() {
   const response = await fetch(imgUrl.value);
   const blob = await response.blob();
