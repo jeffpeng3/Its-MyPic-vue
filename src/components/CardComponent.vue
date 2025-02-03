@@ -101,7 +101,6 @@ const copyUrl = async () => {
 }
 
 const copyImage = async () => {
-  try {
     const item = new ClipboardItem({
       'image/png': (async () => {
 
@@ -127,12 +126,6 @@ const copyImage = async () => {
     })
     await navigator.clipboard.write([item])
     copySucess.value = true;
-
-  } catch (e: any) {
-    console.log('Error: ', e.message)
-    copyFailed.value = true;
-    await reportErrorToDiscord(e);
-  }
 }
 
 async function reportErrorToDiscord(e: any) {
