@@ -17,7 +17,7 @@
         <v-btn @click="downloadImage">
           下載
         </v-btn>
-        <v-btn @click="copyImage">複製</v-btn>
+        <v-btn @click="copy">複製</v-btn>
         <v-card-text>{{ text }}</v-card-text>
       </v-card-actions>
     </v-card>
@@ -25,7 +25,12 @@
 
   <v-snackbar v-model="copySucess" :timeout=2000 class="text-center" rounded="pill">
     <div class="text-h6 mx-auto font-weight-bold text-center text-truncate">
-      複製成功
+      圖片複製成功
+    </div>
+  </v-snackbar>
+  <v-snackbar v-model="copyUrlInstead" :timeout=2000 class="text-center" rounded="pill">
+    <div class="text-h6 mx-auto font-weight-bold text-center text-truncate">
+      連結複製成功
     </div>
   </v-snackbar>
   <v-snackbar v-model="copyFailed" :timeout=2000 class="text-center" rounded="pill">
@@ -60,6 +65,7 @@ const baseUrl = 'https://mygodata.0m0.uk/images/';
 const imgUrl = ref(`${baseUrl}${props.episode}_${props.frame_start}.jpg`);
 const showDialog = ref(false);
 const copySucess = ref(false);
+const copyUrlInstead = ref(false);
 const copyFailed = ref(false);
 
 async function downloadImage() {
@@ -76,8 +82,25 @@ async function downloadImage() {
   URL.revokeObjectURL(url);
 }
 
-const copyImage = async () => {
+const copy = async () => {
   try {
+    if (cantCopyImage()) {
+      await copyUrl();
+    } else {
+      await copyImage();
+    }
+  } catch (e: any) {
+    console.error('Error during copy:', e.message);
+    await copyUrl();
+  }
+}
+
+const copyUrl = async () => {
+  await navigator.clipboard.writeText(imgUrl.value);
+  copyUrlInstead.value = true;
+}
+
+const copyImage = async () => {
     const item = new ClipboardItem({
       'image/png': (async () => {
 
@@ -103,24 +126,39 @@ const copyImage = async () => {
     })
     await navigator.clipboard.write([item])
     copySucess.value = true;
+}
 
-  } catch (e: any) {
-    const payload = {
-      content: `Copy failed:\n ${e.message}\n\n${e.stack}`
-    };
+async function reportErrorToDiscord(e: any) {
+  const payload = {
+    content: `Copy failed:\n ${e.message}\n\n${e.stack}`
+  };
 
-    fetch(`https://discord.com/api/webhooks/${atob(settings.webhook)}`, {
+  try {
+    await fetch(`https://discord.com/api/webhooks/${atob(settings.webhook)}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-    copyFailed.value = true;
-    console.log('Error: ', e.message)
+  } catch (fetchError) {
+    console.error('Failed to send error report to Discord:', fetchError);
   }
 }
 
+const isFirefox = () => {
+  return typeof navigator !== 'undefined' && navigator.userAgent.toLowerCase().includes('firefox');
+};
+
+const isMobile = () => {
+  return typeof navigator !== 'undefined' && navigator.userAgent.toLowerCase().includes('mobile');
+};
+
+const noPermission = () => {
+  return false;
+};
+
+const cantCopyImage = () => {
+  return (isFirefox() && isMobile()) || noPermission();
+};
 </script>
 
 <style scoped>
