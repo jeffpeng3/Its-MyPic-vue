@@ -9,23 +9,28 @@
             <v-menu activator="parent" location="center">
               <v-list>
                 <v-icon :icon="`mdiSvg:${mdiOpenInNew}`"></v-icon>
+                <v-list-item :key="0" target="_blank" :value="0" :append-icon="mdiOpenInNew"
+                  href="https://github.com/NightFeather0615/Its-MyPic-Android">
+                  <v-list-item-title>Its-MyPic for Android</v-list-item-title>
+                </v-list-item>
+
                 <v-list-item :key="1" target="_blank" :value="1" :append-icon="mdiOpenInNew"
-                  href="https://github.com/jeffpeng3/PowerToys-Run-Its-MyPic">
+                  href="https://github.com/Its-MyPic/PowerToys-Run-Its-MyPic">
                   <v-list-item-title>PowerToys-Run Plugin</v-list-item-title>
                 </v-list-item>
 
                 <v-list-item :key="2" target="_blank" :value="2" :append-icon="mdiOpenInNew"
-                  href="https://github.com/jeffpeng3/krunner-Its-MyPic">
+                  href="https://github.com/Its-MyPic/krunner-Its-MyPic">
                   <v-list-item-title>Krunner Plugin</v-list-item-title>
                 </v-list-item>
 
                 <v-list-item :key="3" target="_blank" :value="3" :append-icon="mdiOpenInNew"
-                  href="https://github.com/jeffpeng3/Its-MyPic-vue">
+                  href="https://github.com/Its-MyPic/Its-MyPic-vue">
                   <v-list-item-title>這個網頁的原始碼</v-list-item-title>
                 </v-list-item>
 
                 <v-list-item :key="4" target="_blank" :value="4" :append-icon="mdiOpenInNew"
-                  href="https://github.com/jeffpeng3/MyPicDB">
+                  href="https://github.com/Its-MyPic/Its-MyPicDB">
                   <v-list-item-title>mygo系列的截圖資料</v-list-item-title>
                 </v-list-item>
               </v-list>
