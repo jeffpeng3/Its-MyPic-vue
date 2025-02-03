@@ -48,10 +48,13 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  canCopyImage: {
+    type: Boolean,
+    required: true,
+  },
 });
 
 const baseUrl = 'https://mygodata.0m0.uk/images/';
-// const imgUrl = computed(() => `${baseUrl}${props.episode}_${props.frame_start}.jpg`);
 const imgUrl = ref(`${baseUrl}${props.episode}_${props.frame_start}.jpg`);
 const showDialog = ref(false);
 const copyResult = ref(false);
@@ -72,53 +75,61 @@ async function downloadImage() {
 
 const copy = async () => {
   try {
-    if (cantCopyImage()) {
-      await copyUrl();
-    } else {
+    if (props.canCopyImage) {
       await copyImage();
+    } else {
+      await copyUrl();
     }
   } catch (e: any) {
-    console.error('Error during copy:', e.message);
-    await copyUrl();
+    reportErrorToDiscord(e);
+    try {
+      await copyUrl();
+    } catch (e: any) {
+      console.error('Error during copy:', e.message);
+      snack_text.value = '失敗 請按左下角回報手機型號/瀏覽器';
+      reportErrorToDiscord(e);
+    }
+  } finally {
+    copyResult.value = true;
   }
 }
 
 const copyUrl = async () => {
   await navigator.clipboard.writeText(imgUrl.value);
-  copyUrlInstead.value = true;
+  snack_text.value = '連結複製成功';
 }
 
 const copyImage = async () => {
-    const item = new ClipboardItem({
-      'image/png': (async () => {
+  const item = new ClipboardItem({
+    'image/png': (async () => {
 
-        let img = new Image();
-        img.src = imgUrl.value;
-        img.crossOrigin = 'Anonymous';
-        img.style.display = 'none';
-        await new Promise((resolve) => {
-          img.onload = resolve;
-        });
+      let img = new Image();
+      img.src = imgUrl.value;
+      img.crossOrigin = 'Anonymous';
+      img.style.display = 'none';
+      await new Promise((resolve) => {
+        img.onload = resolve;
+      });
 
-        let canvas = document.createElement('canvas');
-        let ctx = canvas.getContext('2d') ?? new CanvasRenderingContext2D();
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);
-        const blobUrl = canvas.toDataURL("image/png");
+      let canvas = document.createElement('canvas');
+      let ctx = canvas.getContext('2d') ?? new CanvasRenderingContext2D();
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+      const blobUrl = canvas.toDataURL("image/png");
 
-        const data = await fetch(blobUrl);
-        return await data.blob();
-      }
-      )(),
-    })
-    await navigator.clipboard.write([item])
-    copySucess.value = true;
+      const data = await fetch(blobUrl);
+      return await data.blob();
+    }
+    )(),
+  })
+  await navigator.clipboard.write([item])
+  snack_text.value = "圖片複製成功";
 }
 
-async function reportErrorToDiscord(e: any) {
+async function reportErrorToDiscord(e: Error) {
   const payload = {
-    content: `Copy failed:\n ${e.message}\n\n${e.stack}`
+    content: `Copy failed: ${e.name}\n\n${e.message}\n\n${e.stack}`
   };
 
   try {
@@ -132,21 +143,7 @@ async function reportErrorToDiscord(e: any) {
   }
 }
 
-const isFirefox = () => {
-  return typeof navigator !== 'undefined' && navigator.userAgent.toLowerCase().includes('firefox');
-};
 
-const isMobile = () => {
-  return typeof navigator !== 'undefined' && navigator.userAgent.toLowerCase().includes('mobile');
-};
-
-const noPermission = () => {
-  return false;
-};
-
-const cantCopyImage = () => {
-  return (isFirefox() && isMobile()) || noPermission();
-};
 </script>
 
 <style scoped>

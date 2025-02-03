@@ -5,7 +5,7 @@
     <v-responsive class="align-start fill-height mx-auto">
       <v-row class="text-center justify-center">
         <v-col v-for="(card, index) in showedCards" :key="card.segment_id" cols="auto">
-          <CardComponent :frame_start="card.frame_start" :episode="card.episode" :text="card.text" />
+          <CardComponent :frame_start="card.frame_start" :episode="card.episode" :text="card.text" :canCopyImage="canCopyImage" />
         </v-col>
       </v-row>
     </v-responsive>
@@ -15,6 +15,23 @@
 </template>
 
 <script setup lang="ts">
+const isFirefox = () => {
+  return typeof navigator !== 'undefined' && navigator.userAgent.toLowerCase().includes('firefox');
+};
+
+const isMobile = () => {
+  return typeof navigator !== 'undefined' && navigator.userAgent.toLowerCase().includes('mobile');
+};
+
+const noPermission = () => {
+  return false;
+};
+
+const cantCopyImage = () => {
+  return (isFirefox() && isMobile()) || noPermission();
+};
+const canCopyImage = ref(true);
+
 type CardData = {
   segment_id: number;
   frame_start: number;
@@ -63,6 +80,7 @@ const handleScroll = () => {
 };
 
 onMounted(() => {
+  canCopyImage.value = !cantCopyImage();
   window.addEventListener("scroll", handleScroll);
 });
 
