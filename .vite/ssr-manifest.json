@@ -1,6 +1,6 @@
 {
   "\u0000plugin-vue:export-helper": [
-    "/assets/index-8mBQOArV.js",
+    "/assets/index-CNHL0vwC.js",
     "/assets/index-DxlHNrWR.css"
   ],
   "\u0000vite/modulepreload-polyfill.js": [],
@@ -808,48 +808,48 @@
   ],
   "src/App.vue?vue&type=script&setup=true&lang.ts": [],
   "src/assets/data/data.json": [
-    "/assets/index-8mBQOArV.js",
+    "/assets/index-CNHL0vwC.js",
     "/assets/index-DxlHNrWR.css"
   ],
   "src/assets/setting.json": [
-    "/assets/index-8mBQOArV.js",
+    "/assets/index-CNHL0vwC.js",
     "/assets/index-DxlHNrWR.css"
   ],
   "src/components/AppBarComponent.vue?vue&type=script&setup=true&lang.ts": [
-    "/assets/index-8mBQOArV.js",
+    "/assets/index-CNHL0vwC.js",
     "/assets/index-DxlHNrWR.css"
   ],
   "src/components/CardComponent.vue": [
-    "/assets/index-8mBQOArV.js",
+    "/assets/index-CNHL0vwC.js",
     "/assets/index-DxlHNrWR.css"
   ],
   "src/components/CardComponent.vue?vue&type=script&setup=true&lang.ts": [
-    "/assets/index-8mBQOArV.js",
+    "/assets/index-CNHL0vwC.js",
     "/assets/index-DxlHNrWR.css"
   ],
   "src/components/CardComponent.vue?vue&type=style&index=0&scoped=910ddd51&lang.css": [
-    "/assets/index-8mBQOArV.js",
+    "/assets/index-CNHL0vwC.js",
     "/assets/index-DxlHNrWR.css"
   ],
   "src/components/FooterComponent.vue?vue&type=script&setup=true&lang.ts": [
-    "/assets/index-8mBQOArV.js",
+    "/assets/index-CNHL0vwC.js",
     "/assets/index-DxlHNrWR.css"
   ],
   "src/components/MainView.vue?vue&type=script&setup=true&lang.ts": [
-    "/assets/index-8mBQOArV.js",
+    "/assets/index-CNHL0vwC.js",
     "/assets/index-DxlHNrWR.css"
   ],
   "src/components/ReportDialog.vue?vue&type=script&setup=true&lang.ts": [
-    "/assets/index-8mBQOArV.js",
+    "/assets/index-CNHL0vwC.js",
     "/assets/index-DxlHNrWR.css"
   ],
   "src/main.ts": [],
   "src/pages/index.vue": [
-    "/assets/index-8mBQOArV.js",
+    "/assets/index-CNHL0vwC.js",
     "/assets/index-DxlHNrWR.css"
   ],
   "src/pages/index.vue?vue&type=script&setup=true&lang.ts": [
-    "/assets/index-8mBQOArV.js",
+    "/assets/index-CNHL0vwC.js",
     "/assets/index-DxlHNrWR.css"
   ],
   "src/plugins/long-press.ts": [],
