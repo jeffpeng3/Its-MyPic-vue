@@ -5,32 +5,20 @@
     <v-responsive class="align-start fill-height mx-auto">
       <v-row class="text-center justify-center">
         <v-col v-for="(card, index) in showedCards" :key="card.segment_id" cols="auto">
-          <CardComponent :frame_start="card.frame_start" :episode="card.episode" :text="card.text" :canCopyImage="canCopyImage" />
+          <CardComponent :frame_start="card.frame_start" :episode="card.episode" :text="card.text" :preferCopyURL="copyMode" />
         </v-col>
       </v-row>
     </v-responsive>
   </v-container>
 
-  <FooterComponent />
+  <FooterComponent v-model:copy-url-mode="copyMode"/>
 </template>
 
 <script setup lang="ts">
-const isFirefox = () => {
-  return typeof navigator !== 'undefined' && navigator.userAgent.toLowerCase().includes('firefox');
-};
-
-const isMobile = () => {
-  return typeof navigator !== 'undefined' && navigator.userAgent.toLowerCase().includes('mobile');
-};
-
-const noPermission = () => {
-  return false;
-};
-
-const cantCopyImage = () => {
-  return (isFirefox() && isMobile()) || noPermission();
-};
-const canCopyImage = ref(true);
+import AppBarComponent from "./AppBarComponent.vue";
+import FooterComponent from "./FooterComponent.vue";
+import CardComponent from "./CardComponent.vue";
+const copyMode = ref<boolean>(false);
 
 type CardData = {
   segment_id: number;
@@ -80,7 +68,6 @@ const handleScroll = () => {
 };
 
 onMounted(() => {
-  canCopyImage.value = !cantCopyImage();
   window.addEventListener("scroll", handleScroll);
 });
 
