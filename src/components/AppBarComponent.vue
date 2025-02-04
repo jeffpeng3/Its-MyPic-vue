@@ -4,10 +4,11 @@
       <div class="text-h5 mx-auto font-weight-bold text-center text-truncate">
         MyGO Mujica 截圖搜尋器
       </div>
-      <v-col class="text-center">
-        <v-text-field v-model="searchQuery" single-line hide-details clearable label="搜尋" variant="outlined"
-          class="short-search" @keyup.enter="emitSearchQuery" @click:clear="clearMessage" @input="debounceEmitSearchQuery" />
-      </v-col>
+        <v-col class="text-center">
+          <v-text-field v-model="searchQuery" single-line hide-details clearable label="搜尋" variant="outlined"
+            class="short-search" @keyup.enter="emitSearchQuery" @click:clear="clearMessage" @input="debounceEmitSearchQuery"
+            autofocus/>
+        </v-col>
     </v-container>
   </v-app-bar>
 </template>
