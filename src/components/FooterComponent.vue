@@ -106,7 +106,7 @@ const hasPermission = () => {
 };
 
 const checkCanCopyImage = () => {
-  return hasPermission() && !isFirefox() && !isMobile();
+  return hasPermission() && !(isFirefox() && isMobile());
 };
 
 onMounted(() => {
