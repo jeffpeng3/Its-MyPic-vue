@@ -6,7 +6,7 @@
 
 import { ViteSSG } from 'vite-ssg'
 import App from './App.vue'
-// import router from './router'
+import LongPress from './plugins/long-press'
 import vuetify from './plugins/vuetify'
 import { routes } from 'vue-router/auto-routes'
 
@@ -15,5 +15,6 @@ export const createApp = ViteSSG(
   { routes: routes },
   (ctx) => {
     ctx.app.use(vuetify)
+    ctx.app.directive("longPress",LongPress)
   }
 )

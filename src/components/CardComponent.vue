@@ -14,10 +14,8 @@
           回報
           <ReportDialog :fileName="imgUrl" :text="text" />
         </v-btn>
-        <v-btn @click="downloadImage">
-          下載
-        </v-btn>
-        <v-btn @click="copy">複製</v-btn>
+        <v-btn @click="downloadImage">下載</v-btn>
+        <v-btn v-long-press="() => copy(true)" @click="() => copy(false)">複製</v-btn>
         <v-card-text>{{ text }}</v-card-text>
       </v-card-actions>
     </v-card>
@@ -31,10 +29,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-
+import { ref } from 'vue';
 import settings from '../assets/setting.json';
-
 const props = defineProps({
   episode: {
     type: String,
@@ -48,7 +44,7 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  canCopyImage: {
+  preferCopyURL: {
     type: Boolean,
     required: true,
   },
@@ -59,6 +55,7 @@ const imgUrl = ref(`${baseUrl}${props.episode}_${props.frame_start}.jpg`);
 const showDialog = ref(false);
 const copyResult = ref(false);
 const snack_text = ref('連結複製成功');
+
 async function downloadImage() {
   const response = await fetch(imgUrl.value);
   const blob = await response.blob();
@@ -73,12 +70,24 @@ async function downloadImage() {
   URL.revokeObjectURL(url);
 }
 
-const copy = async () => {
+let isLongPress = false;
+const copy = async (longPress: boolean) => {
+  if (isLongPress && !longPress) {
+    isLongPress = false;
+    return;
+  }
+  if (longPress) {
+    isLongPress = true;
+  }
+
+  copyResult.value = false;
+  const preferCopyURL = longPress || props.preferCopyURL;
+  // console.log(preferCopyURL);
   try {
-    if (props.canCopyImage) {
-      await copyImage();
-    } else {
+    if (preferCopyURL) {
       await copyUrl();
+    } else {
+      await copyImage();
     }
   } catch (e: any) {
     reportErrorToDiscord(e);
