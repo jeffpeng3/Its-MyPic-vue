@@ -46,7 +46,7 @@
         </v-col>
         <v-col cols="1">
           <v-btn variant="text" size="small" density="comfortable" :icon="mdiCog">
-            <v-icon :icon="mdiCog" />
+            <v-icon :icon="mdiCog" aria-label="設定" />
 
             <v-dialog activator="parent" max-width="600px" :style="{ maxHeight: '90vh', minHeight: '200px' }">
               <v-card class="d-flex flex-column align-center justify-center font-weight-bold">
