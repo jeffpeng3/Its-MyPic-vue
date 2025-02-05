@@ -1,6 +1,12 @@
 <template>
   <v-card color="surface-variant" rounded="lg" variant="tonal" @click="showDialog = true">
-    <img :src="imgUrl" cover width="280px" height="157px" :alt="text" />
+    <div style="position: relative; width: 280px; height: 157px;">
+      <img :src="imgUrl" cover width="280px" height="157px" :alt="text" />
+      <div
+        style="position: absolute; top: 0; right: 0; background: rgba(0, 0, 0, 0.5); color: white; padding: 5px 5px;">
+        {{ episodeText }} {{ timestamp }}
+      </div>
+    </div>
     <v-card-text class="card-text text-center justify-center">
       {{ text }}
     </v-card-text>
@@ -8,7 +14,14 @@
 
   <v-dialog v-model="showDialog" max-width="600px" :style="{ maxHeight: '90vh' }">
     <v-card>
-      <v-img :src="imgUrl" :style="{ maxHeight: '70vh', objectFit: 'contain' }" />
+      <div style="position: relative;">
+        <v-img :src="imgUrl" :style="{ maxHeight: '70vh', objectFit: 'contain' }" />
+        <div
+          style="position: absolute; top: 0; right: 0; background: rgba(0, 0, 0, 0.5); color: white; padding: 5px 5px;">
+          {{ episodeText }} {{ timestamp }}
+        </div>
+      </div>
+
       <v-card-actions>
         <v-btn>
           回報
@@ -49,6 +62,11 @@ const props = defineProps({
     required: true,
   },
 });
+const totalSec = props.frame_start / 24
+const isAveMujica = props.episode.startsWith('ave');
+const episodeText = `${isAveMujica ? "Ave Mujica" : "MyGO"} 第${props.episode.replace("ave-", "")}集`;
+const timestamp = `${Math.floor(totalSec / 60)}:${('0' + Math.round(totalSec % 60)).slice(-2)}`;
+
 
 const baseUrl = 'https://mygodata.0m0.uk/images/';
 const imgUrl = ref(`${baseUrl}${props.episode}_${props.frame_start}.jpg`);
