@@ -7,7 +7,7 @@
         {{ episodeText }} {{ timestamp }}
       </div>
     </div>
-    <v-card-text class="card-text text-center justify-center">
+    <v-card-text class="card-text text-center justify-center d-flex" style="width: 100%;">
       {{ text }}
     </v-card-text>
   </v-card>
@@ -21,15 +21,23 @@
           {{ episodeText }} {{ timestamp }}
         </div>
       </div>
-
+      <v-row>
+        <v-col>
+          <v-card-text class="text-center justify-center">{{ text }}</v-card-text>
+        </v-col>
+      </v-row>
       <v-card-actions>
-        <v-btn>
-          回報
-          <ReportDialog :fileName="imgUrl" :text="text" />
-        </v-btn>
-        <v-btn @click="downloadImage">下載</v-btn>
-        <v-btn v-long-press="() => copy(true)" @click="() => copy(false)">複製</v-btn>
-        <v-card-text>{{ text }}</v-card-text>
+        <v-row>
+          <v-btn>
+            回報
+            <ReportDialog :fileName="imgUrl" :text="text" />
+          </v-btn>
+          <v-btn @click="downloadImage">下載</v-btn>
+          <v-btn v-long-press="() => copy(true)" @click="() => copy(false)">複製</v-btn>
+          <v-btn :href="videoLinkWithTimestamp" target="_blank">
+            從這裡開始看
+          </v-btn>
+        </v-row>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -64,9 +72,15 @@ const props = defineProps({
 });
 const totalSec = props.frame_start / 24
 const isAveMujica = props.episode.startsWith('ave');
-const episodeText = `${isAveMujica ? "Ave Mujica" : "MyGO"} 第${props.episode.replace("ave-", "")}集`;
+const session = isAveMujica ? 'Ave Mujica' : 'MyGO';
+const episodeText = `${session} 第${props.episode.replace("ave-", "")}話`;
 const timestamp = `${Math.floor(totalSec / 60)}:${('0' + Math.round(totalSec % 60)).slice(-2)}`;
+const episodeKey = props.episode.replace("ave-", "") as keyof typeof settings.videoLink[typeof session];
+const sessionVideoLink = settings.videoLink[session];
+const videoLink = sessionVideoLink[episodeKey];
+const videoLinkWithTimestamp = `${videoLink}&t=${Math.round(totalSec)}s`;
 
+// console.log(videoLinkWithTimestamp);
 
 const baseUrl = 'https://mygodata.0m0.uk/images/';
 const imgUrl = ref(`${baseUrl}${props.episode}_${props.frame_start}.jpg`);
