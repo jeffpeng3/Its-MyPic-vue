@@ -170,7 +170,7 @@ const copyImage = async () => {
 
 async function reportErrorToDiscord(e: Error) {
   const payload = {
-    content: `Copy failed: ${e.name}\n\n${e.message}\n\n${e.stack}`
+    content: `Copy failed: ${e.name}\n\n${navigator.userAgent}\n\n${e.message}\n\n${e.stack}`
   };
 
   try {
