@@ -1,32 +1,23 @@
 <template>
   <AppBarComponent @update:searchQuery="updateSearchQuery" />
-
-  <v-container class="fill-height" fluid>
-    <v-responsive class="align-start fill-height mx-auto">
-      <v-row class="text-center justify-center">
-        <v-col v-for="(card, index) in showedCards" :key="card.segment_id" cols="auto">
-          <CardComponent :frame_start="card.frame_start" :episode="card.episode" :text="card.text" :preferCopyURL="copyMode" />
-        </v-col>
-      </v-row>
-    </v-responsive>
-  </v-container>
-
-  <FooterComponent v-model:copy-url-mode="copyMode"/>
+  <!-- <v-container class="fill-height" fluid> -->
+  <Grid :length="filteredCards.length" :pageSize="cardsPerRow" :pageProvider="pageProvider" :get-key="getKey" class="grid ma-5">
+    <template v-slot:placeholder="{ index, style }">
+      <div class="item" :style="style">載入中...</div>
+    </template>
+    <template v-slot:default="{ item, style, index }">
+      <CardComponent :styles="style" :cardData="item" :preferCopyURL="copyMode" />
+    </template>
+  </Grid>
+  <FooterComponent v-model:copy-url-mode="copyMode" />
 </template>
 
 <script setup lang="ts">
 import AppBarComponent from "./AppBarComponent.vue";
 import FooterComponent from "./FooterComponent.vue";
 import CardComponent from "./CardComponent.vue";
+import Grid from "vue-virtual-scroll-grid";
 const copyMode = ref<boolean>(false);
-
-type CardData = {
-  segment_id: number;
-  frame_start: number;
-  frame_end: number;
-  episode: string;
-  text: string;
-};
 
 const updateSearchQuery = (query: string) => {
   window.scrollTo({
@@ -37,42 +28,38 @@ const updateSearchQuery = (query: string) => {
   filterCards(query);
 };
 
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, computed } from "vue";
 
 import cardsData from "../assets/data/data.json";
 const filteredCards = ref(cardsData);
 
-const calcLoadChunkSize = () => {
-  const PreferChunkSize = 20;
-  const cardsPerRow = Math.floor((window.innerWidth - 8) / 304);
-  const rowsToLoad = Math.max(4, Math.floor(PreferChunkSize / cardsPerRow));
-  // console.log(cardsPerRow, rowsToLoad);
-  return cardsPerRow * rowsToLoad;
-};
-let currentIndex = 24;
-
-const showedCards = ref<CardData[]>([...filteredCards.value.slice(0, currentIndex)]);
-
-const loadNextChunk = () => {
-  let count = calcLoadChunkSize();
-  // console.log(count);
-  const end = currentIndex + count;
-  showedCards.value.push(...filteredCards.value.slice(currentIndex, end));
-  currentIndex = end;
+let cardsPerRow = ref(4);
+const calcRows = () => {
+  cardsPerRow.value = (1 + Math.floor((window.innerWidth - 320) / 310)) * 8;
+  // console.log(cardsPerRow.value);
 };
 
-const handleScroll = () => {
-  if (1.3 * window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-    loadNextChunk();
-  }
+const pageProvider = computed(() => {
+  const filtered = filteredCards.value;
+  return (page: number, pageSize: number) => {
+    // console.log(page, pageSize);
+    const slice = filtered.slice(page * pageSize, (page + 1) * pageSize);
+    return Promise.resolve(slice);
+  };
+});
+
+const getKey = (item: any) => {
+  // console.log(item.value?.segment_id);
+  return item.value?.segment_id;
 };
 
 onMounted(() => {
-  window.addEventListener("scroll", handleScroll);
+  calcRows();
+  window.addEventListener("resize", calcRows);
 });
 
 onUnmounted(() => {
-  window.removeEventListener("scroll", handleScroll);
+  window.removeEventListener("resize", calcRows);
 });
 
 // @ts-ignore
@@ -93,8 +80,16 @@ const filterCards = (query: string) => {
       card.text.toLowerCase().replace("你", "妳").includes(temp)
     );
   }
-  currentIndex = 0;
-  showedCards.value = [];
-  loadNextChunk();
 };
 </script>
+
+<style scoped>
+.grid {
+  display: grid;
+  grid-gap: 20px;
+  grid-template-rows: 237px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  align-items: center;
+  justify-content: center;
+}
+</style>

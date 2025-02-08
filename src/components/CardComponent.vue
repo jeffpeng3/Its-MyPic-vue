@@ -1,68 +1,76 @@
 <template>
-  <v-card color="surface-variant" rounded="lg" variant="tonal" @click="showDialog = true">
-    <div style="position: relative; width: 280px; height: 157px;">
-      <img :src="imgUrl" cover width="280px" height="157px" :alt="text" />
-      <div
-        style="position: absolute; top: 0; right: 0; background: rgba(0, 0, 0, 0.5); color: white; padding: 5px 5px;">
-        {{ episodeText }} {{ timestamp }}
-      </div>
-    </div>
-    <v-card-text class="card-text text-center justify-center d-flex" style="width: 100%;">
-      {{ text }}
-    </v-card-text>
-  </v-card>
-
-  <v-dialog v-model="showDialog" max-width="600px" :style="{ maxHeight: '90vh' }">
-    <v-card>
-      <div style="position: relative;">
-        <v-img :src="imgUrl" :style="{ maxHeight: '70vh', objectFit: 'contain' }" />
+  <div :style="styles">
+    <v-card class="card size" color="surface-variant" rounded="lg" variant="tonal" @click="showDialog = true">
+      <div style="position: relative;" class="size">
+        <img :src="imgUrl" class="size" :alt="text" />
         <div
           style="position: absolute; top: 0; right: 0; background: rgba(0, 0, 0, 0.5); color: white; padding: 5px 5px;">
           {{ episodeText }} {{ timestamp }}
         </div>
       </div>
-      <v-row>
-        <v-col>
-          <v-card-text class="text-center justify-center">{{ text }}</v-card-text>
-        </v-col>
-      </v-row>
-      <v-card-actions>
-        <v-row>
-          <v-btn>
-            回報
-            <ReportDialog :fileName="imgUrl" :text="text" />
-          </v-btn>
-          <v-btn @click="downloadImage">下載</v-btn>
-          <v-btn v-long-press="() => copy(true)" @click="() => copy(false)">複製</v-btn>
-          <v-btn :href="videoLinkWithTimestamp" target="_blank">
-            從這裡開始看
-          </v-btn>
-        </v-row>
-      </v-card-actions>
+      <v-card-text class="card-text text-center justify-center">
+        {{ text }}
+      </v-card-text>
     </v-card>
-  </v-dialog>
 
-  <v-snackbar v-model="copyResult" :timeout=2000 class="text-center" rounded="pill">
-    <div class="text-h6 mx-auto font-weight-bold text-center text-truncate">
-      {{ snack_text }}
-    </div>
-  </v-snackbar>
+    <v-dialog v-model="showDialog" max-width="600px" :style="{ maxHeight: '90vh' }">
+      <v-card>
+        <div style="position: relative;">
+          <v-img :src="imgUrl" :style="{ maxHeight: '70vh', objectFit: 'contain' }" />
+          <div
+            style="position: absolute; top: 0; right: 0; background: rgba(0, 0, 0, 0.5); color: white; padding: 5px 5px;">
+            {{ episodeText }} {{ timestamp }}
+          </div>
+        </div>
+        <v-row>
+          <v-col>
+            <v-card-text class="text-center">{{ text }}</v-card-text>
+          </v-col>
+        </v-row>
+        <v-card-actions>
+          <v-row>
+            <v-btn>
+              回報
+              <ReportDialog :fileName="imgUrl" :text="text" />
+            </v-btn>
+            <v-btn @click="downloadImage">下載</v-btn>
+            <v-btn v-long-press="() => copy(true)" @click="() => copy(false)">複製</v-btn>
+            <v-btn :href="videoLinkWithTimestamp" target="_blank">
+              從這裡開始看
+            </v-btn>
+          </v-row>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-snackbar v-model="copyResult" :timeout=2000 class="text-center" rounded="pill">
+      <div class="text-h6 mx-auto font-weight-bold text-center text-truncate">
+        {{ snack_text }}
+      </div>
+    </v-snackbar>
+  </div>
+
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref, type PropType } from 'vue';
+
+type CardData = {
+  segment_id: number;
+  frame_start: number;
+  frame_end: number;
+  episode: string;
+  text: string;
+};
+
 import settings from '../assets/setting.json';
 const props = defineProps({
-  episode: {
-    type: String,
+  styles: {
+    type: Object,
     required: true,
   },
-  frame_start: {
-    type: Number,
-    required: true,
-  },
-  text: {
-    type: String,
+  cardData: {
+    type: Object as PropType<CardData>,
     required: true,
   },
   preferCopyURL: {
@@ -70,20 +78,26 @@ const props = defineProps({
     required: true,
   },
 });
-const totalSec = props.frame_start / 24
-const isAveMujica = props.episode.startsWith('ave');
+
+const text = props.cardData.text;
+const episode = props.cardData.episode;
+
+const isAveMujica = episode.startsWith('ave');
 const session = isAveMujica ? 'Ave Mujica' : 'MyGO';
-const episodeText = `${session} 第${props.episode.replace("ave-", "")}話`;
+const episodeText = `${session} 第${episode.replace("ave-", "")}話`;
+
+const episodeKey = episode.replace("ave-", "") as keyof typeof settings.videoLink[typeof session];
+const videoLink = settings.videoLink[session][episodeKey];
+
+const frame_start = props.cardData.frame_start;
+const totalSec = frame_start / 24
 const timestamp = `${Math.floor(totalSec / 60)}:${('0' + Math.round(totalSec % 60)).slice(-2)}`;
-const episodeKey = props.episode.replace("ave-", "") as keyof typeof settings.videoLink[typeof session];
-const sessionVideoLink = settings.videoLink[session];
-const videoLink = sessionVideoLink[episodeKey];
 const videoLinkWithTimestamp = `${videoLink}&t=${Math.round(totalSec)}s`;
 
 // console.log(videoLinkWithTimestamp);
 
 const baseUrl = 'https://mygodata.0m0.uk/images/';
-const imgUrl = ref(`${baseUrl}${props.episode}_${props.frame_start}.jpg`);
+const imgUrl = computed(() => `${baseUrl}${episode}_${frame_start}.jpg`);
 const showDialog = ref(false);
 const copyResult = ref(false);
 const snack_text = ref('連結複製成功');
@@ -95,7 +109,7 @@ async function downloadImage() {
 
   const link = document.createElement('a');
   link.href = url;
-  link.download = `${props.text}.jpg`;
+  link.download = `${text}.jpg`;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -194,5 +208,16 @@ async function reportErrorToDiscord(e: Error) {
   height: 80px;
   max-width: 280px;
   flex: 1;
+}
+
+.size {
+  width: 280px;
+  height: 157px;
+}
+
+.card {
+  left: 50%;
+  transform: translate(-50%, 0);
+  height: 237px;
 }
 </style>
