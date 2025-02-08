@@ -26,7 +26,7 @@ jobs:
 
     - name: patch module
       run: |
-        sed -i 's/"name": "vue-virtual-scroll-grid"/"name": "vue-virtual-scroll-grid",\n  "type": "module"/g' node_modules/vue-virtual-scroll-grid/package.json
+        grep -q '"type": "module"' node_modules/vue-virtual-scroll-grid/package.json || sed -i 's/"name": "vue-virtual-scroll-grid"/"name": "vue-virtual-scroll-grid",\n  "type": "module"/g' node_modules/vue-virtual-scroll-grid/package.json
 
     - name: Build project
       run: npm run build
