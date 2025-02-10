@@ -1,9 +1,9 @@
 <template>
-  <AppBarComponent @update:searchQuery="updateSearchQuery" />
+  <AppBarComponent @update:searchQuery="updateSearchQuery" v-model:ascending="ascending" />
   <!-- <v-container class="fill-height" fluid> -->
   <Grid :length="filteredCards.length" :pageSize="cardsPerRow" :pageProvider="pageProvider" :get-key="getKey" class="grid ma-5">
     <template v-slot:placeholder="{ index, style }">
-      <div class="item" :style="style">載入中...</div>
+      <div class="item" :style="style">還在GO...</div>
     </template>
     <template v-slot:default="{ item, style, index }">
       <CardComponent :styles="style" :cardData="item" :preferCopyURL="copyMode" />
@@ -28,9 +28,10 @@ const updateSearchQuery = (query: string) => {
   filterCards(query);
 };
 
-import { ref, onMounted, onUnmounted, computed } from "vue";
+import { ref, onMounted, onUnmounted, computed, watch } from "vue";
+import rawCardsData from "../assets/data/data.json";
+var cardsData = rawCardsData;
 
-import cardsData from "../assets/data/data.json";
 const filteredCards = ref(cardsData);
 
 let cardsPerRow = ref(4);
@@ -39,8 +40,18 @@ const calcRows = () => {
   // console.log(cardsPerRow.value);
 };
 
+const ascending = ref(true);
+
+watch(ascending, () => {
+  // console.log(ascending.value);
+  cardsData.reverse();
+  // console.log(cardsData[0]);
+  filterCards(queryCache);
+});
+
 const pageProvider = computed(() => {
   const filtered = filteredCards.value;
+  const update = ascending.value;
   return (page: number, pageSize: number) => {
     // console.log(page, pageSize);
     const slice = filtered.slice(page * pageSize, (page + 1) * pageSize);
@@ -71,7 +82,9 @@ import tw from 'opencc-js/to/tw'; // dictionary
 
 const converter = ConverterFactory(cn, tw);
 
+var queryCache = "";
 const filterCards = (query: string) => {
+  queryCache = query;
   if (query === "") {
     filteredCards.value = cardsData;
   } else {

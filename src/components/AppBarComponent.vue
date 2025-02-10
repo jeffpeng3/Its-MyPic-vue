@@ -4,17 +4,26 @@
       <div class="text-h5 mx-auto font-weight-bold text-center text-truncate">
         MyGO Mujica 截圖搜尋器
       </div>
-        <v-col class="text-center">
-          <v-text-field v-model="searchQuery" single-line hide-details clearable label="搜尋" variant="outlined"
-            class="short-search" @keyup.enter="emitSearchQuery" @click:clear="clearMessage" @input="debounceEmitSearchQuery"
-            autofocus/>
-        </v-col>
+      <v-col class="text-center">
+        <v-text-field v-model="searchQuery" single-line hide-details clearable label="搜尋" variant="outlined"
+          class="short-search" @keyup.enter="emitSearchQuery" @click:clear="clearMessage"
+          @input="debounceEmitSearchQuery" autofocus>
+          <template v-slot:append>
+            <v-icon @click="ascendingBind = !ascendingBind"
+              :icon="ascendingBind ? mdiSortVariant : mdiSortReverseVariant" />
+          </template>
+        </v-text-field>
+      </v-col>
     </v-container>
   </v-app-bar>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
+import { mdiSortReverseVariant, mdiSortVariant } from "@mdi/js";
+const ascendingBind = computed({ get() { return ascending.value }, set(newValue) { ascending.value = newValue; } });
+const ascending = defineModel('ascending', { type: Boolean, required: true });
+
 const emit = defineEmits(['update:searchQuery']);
 const searchQuery = ref("");
 const debounceTimeout = ref<number>();
