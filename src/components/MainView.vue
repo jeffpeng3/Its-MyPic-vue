@@ -1,7 +1,8 @@
 <template>
   <AppBarComponent @update:searchQuery="updateSearchQuery" v-model:ascending="ascending" />
   <!-- <v-container class="fill-height" fluid> -->
-  <Grid :length="filteredCards.length ? filteredCards.length : 1" :pageSize="cardsPerRow" :pageProvider="pageProvider" :get-key="getKey" :page-provider-debounce-time="100" class="grid ma-5">
+  <Grid :length="filteredCards.length ? filteredCards.length : 1" :pageSize="cardsPerRow" :pageProvider="pageProvider" :get-key="getKey" :pageProviderDebounceTime="5"
+    class="grid ma-5">
     <template v-slot:placeholder="{ index, style }">
       <div class="item" :style="style">{{filteredCards.length ? "還在GO..." : ""}}</div>
     </template>
@@ -29,11 +30,26 @@ const updateSearchQuery = (query: string) => {
 };
 
 import { ref, onMounted, onUnmounted, computed, watch } from "vue";
-import rawCardsData from "../assets/data/data.json";
-var cardsData = rawCardsData;
+import { Data, Info } from "@/plugins/data";
 
+const dataReady = ref(false);
+
+var xhr = new XMLHttpRequest();
+xhr.open("GET", "/data/data.bin", true);
+xhr.responseType = "arraybuffer";
+xhr.onload = function (evt) {
+  // console.time("decode");
+  var data = Data.decode(new Uint8Array(xhr.response));
+  cardsData = data.info as typeof cardsData;
+  filteredCards.value = cardsData;
+  dataReady.value = true;
+  // console.timeEnd("decode");
+}
+xhr.send(null);
+
+var cardsData: Info[] = [];
+// import cardsData from "../assets/data/data.json";
 const filteredCards = ref(cardsData);
-
 let cardsPerRow = ref(4);
 const calcRows = () => {
   cardsPerRow.value = (1 + Math.floor((window.innerWidth - 320) / 310)) * 8;
@@ -51,17 +67,24 @@ watch(ascending, () => {
 
 const pageProvider = computed(() => {
   const filtered = filteredCards.value;
-  const update = ascending.value;
+  const ascendingValue = ascending.value;
+  // console.log(filtered.length);
+  const ready = dataReady.value;
   return (page: number, pageSize: number) => {
+    if (!ready) {
+      return Promise.resolve([]);
+    }
+    // console.time("page");
     // console.log(page, pageSize);
     const slice = filtered.slice(page * pageSize, (page + 1) * pageSize);
+    // console.timeEnd("page");
     return Promise.resolve(slice);
   };
 });
 
 const getKey = (item: any) => {
-  // console.log(item.value?.segment_id);
-  return item.value?.segment_id;
+  // console.log(item.value?.segmentId);
+  return item.value?.segmentId;
 };
 
 onMounted(() => {
@@ -84,6 +107,7 @@ const converter = ConverterFactory(cn, tw);
 
 var queryCache = "";
 const filterCards = (query: string) => {
+  // console.log(`query: ${query}`);
   queryCache = query;
   if (query === "") {
     filteredCards.value = cardsData;
@@ -93,6 +117,7 @@ const filterCards = (query: string) => {
       card.text.toLowerCase().replace("你", "妳").includes(temp)
     );
   }
+  // console.log(filteredCards.value[0]);
 };
 </script>
 

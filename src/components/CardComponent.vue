@@ -54,14 +54,7 @@
 
 <script setup lang="ts">
 import { computed, ref, type PropType } from 'vue';
-
-type CardData = {
-  segment_id: number;
-  frame_start: number;
-  frame_end: number;
-  episode: string;
-  text: string;
-};
+import { Info } from '@/plugins/data';
 
 import settings from '../assets/setting.json';
 const props = defineProps({
@@ -70,7 +63,7 @@ const props = defineProps({
     required: true,
   },
   cardData: {
-    type: Object as PropType<CardData>,
+    type: Object as PropType<Info>,
     required: true,
   },
   preferCopyURL: {
@@ -80,24 +73,31 @@ const props = defineProps({
 });
 
 const text = props.cardData.text;
+const season = props.cardData.season;
 const episode = props.cardData.episode;
 
-const isAveMujica = episode.startsWith('ave');
-const session = isAveMujica ? 'Ave Mujica' : 'MyGO';
-const episodeText = `${session} 第${episode.replace("ave-", "")}話`;
+const session = season == 2 ? 'Ave Mujica' : 'MyGO';
+const episodeText = `${session} 第${episode}話`;
 
-const episodeKey = episode.replace("ave-", "") as keyof typeof settings.videoLink[typeof session];
+const episodeKey = `${episode}` as keyof typeof settings.videoLink[typeof session];
 const videoLink = settings.videoLink[session][episodeKey];
 
-const frame_start = props.cardData.frame_start;
+
+const frame_start = props.cardData.frameStart;
 const totalSec = frame_start / 23.976;
 const timestamp = `${Math.floor(totalSec / 60)}:${('0' + Math.round(totalSec % 60)).slice(-2)}`;
-const videoLinkWithTimestamp = `${videoLink}&t=${Math.round(totalSec)}s`;
 
+const offset = [0, 0, 34288, 68333, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+const urlSec = Math.round((props.cardData.frameStart + (season == 1 ? offset[episode] : 0)) / 23.976);
+const videoLinkWithTimestamp = `${videoLink}&t=${urlSec}s`;
+
+const framePrefer = props.cardData.framePrefer + (season == 1 ? offset[episode] : 0);
 // console.log(videoLinkWithTimestamp);
 
-const baseUrl = 'https://mygodata.0m0.uk/images/';
-const imgUrl = computed(() => `${baseUrl}${episode}_${frame_start}.jpg`);
+const episode_URL = season == 1 ? (episode < 4 ? "1-3" : `${episode}`) : `ave-${episode}`;
+
+const baseUrl = 'https://qwer.0m0.uk/images/';
+const imgUrl = computed(() => `${baseUrl}${episode_URL}_${framePrefer}.jpg`);
 const showDialog = ref(false);
 const copyResult = ref(false);
 const snack_text = ref('連結複製成功');
