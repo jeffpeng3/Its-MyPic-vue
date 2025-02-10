@@ -90,7 +90,7 @@ const episodeKey = episode.replace("ave-", "") as keyof typeof settings.videoLin
 const videoLink = settings.videoLink[session][episodeKey];
 
 const frame_start = props.cardData.frame_start;
-const totalSec = frame_start / 24
+const totalSec = frame_start / 23.976;
 const timestamp = `${Math.floor(totalSec / 60)}:${('0' + Math.round(totalSec % 60)).slice(-2)}`;
 const videoLinkWithTimestamp = `${videoLink}&t=${Math.round(totalSec)}s`;
 
