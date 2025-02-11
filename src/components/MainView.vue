@@ -1,9 +1,9 @@
 <template>
   <AppBarComponent @update:searchQuery="updateSearchQuery" v-model:ascending="ascending" />
   <!-- <v-container class="fill-height" fluid> -->
-  <Grid :length="filteredCards.length" :pageSize="cardsPerRow" :pageProvider="pageProvider" :get-key="getKey" class="grid ma-5">
+  <Grid :length="filteredCards.length ? filteredCards.length : 1" :pageSize="cardsPerRow" :pageProvider="pageProvider" :get-key="getKey" :page-provider-debounce-time="100" class="grid ma-5">
     <template v-slot:placeholder="{ index, style }">
-      <div class="item" :style="style">還在GO...</div>
+      <div class="item" :style="style">{{filteredCards.length ? "還在GO..." : ""}}</div>
     </template>
     <template v-slot:default="{ item, style, index }">
       <CardComponent :styles="style" :cardData="item" :preferCopyURL="copyMode" />
