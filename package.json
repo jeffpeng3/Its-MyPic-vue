@@ -28,7 +28,7 @@
     "@vue/eslint-config-typescript": "^14.4.0",
     "@vue/tsconfig": "^0.7.0",
     "beasties": "^0.2.0",
-    "eslint": "^9.20.0",
+    "eslint": "^9.20.1",
     "eslint-plugin-vue": "^9.30.0",
     "npm-run-all2": "^7.0.1",
     "sass": "1.84.0",
