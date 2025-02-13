@@ -1,6 +1,6 @@
 {
   "\u0000plugin-vue:export-helper": [
-    "/assets/index-D4OIyDIR.js",
+    "/assets/index-C-lONiBU.js",
     "/assets/index-BWs2pIrx.css"
   ],
   "\u0000vite/modulepreload-polyfill.js": [],
@@ -807,56 +807,56 @@
   ],
   "src/App.vue?vue&type=script&setup=true&lang.ts": [],
   "src/assets/data/data.json": [
-    "/assets/index-D4OIyDIR.js",
+    "/assets/index-C-lONiBU.js",
     "/assets/index-BWs2pIrx.css"
   ],
   "src/assets/setting.json": [
-    "/assets/index-D4OIyDIR.js",
+    "/assets/index-C-lONiBU.js",
     "/assets/index-BWs2pIrx.css"
   ],
   "src/components/AppBarComponent.vue?vue&type=script&setup=true&lang.ts": [
-    "/assets/index-D4OIyDIR.js",
+    "/assets/index-C-lONiBU.js",
     "/assets/index-BWs2pIrx.css"
   ],
   "src/components/CardComponent.vue": [
-    "/assets/index-D4OIyDIR.js",
+    "/assets/index-C-lONiBU.js",
     "/assets/index-BWs2pIrx.css"
   ],
   "src/components/CardComponent.vue?vue&type=script&setup=true&lang.ts": [
-    "/assets/index-D4OIyDIR.js",
+    "/assets/index-C-lONiBU.js",
     "/assets/index-BWs2pIrx.css"
   ],
   "src/components/CardComponent.vue?vue&type=style&index=0&scoped=1e1551d1&lang.css": [
-    "/assets/index-D4OIyDIR.js",
+    "/assets/index-C-lONiBU.js",
     "/assets/index-BWs2pIrx.css"
   ],
   "src/components/FooterComponent.vue?vue&type=script&setup=true&lang.ts": [
-    "/assets/index-D4OIyDIR.js",
+    "/assets/index-C-lONiBU.js",
     "/assets/index-BWs2pIrx.css"
   ],
   "src/components/MainView.vue": [
-    "/assets/index-D4OIyDIR.js",
+    "/assets/index-C-lONiBU.js",
     "/assets/index-BWs2pIrx.css"
   ],
   "src/components/MainView.vue?vue&type=script&setup=true&lang.ts": [
-    "/assets/index-D4OIyDIR.js",
+    "/assets/index-C-lONiBU.js",
     "/assets/index-BWs2pIrx.css"
   ],
   "src/components/MainView.vue?vue&type=style&index=0&scoped=7c79b5d7&lang.css": [
-    "/assets/index-D4OIyDIR.js",
+    "/assets/index-C-lONiBU.js",
     "/assets/index-BWs2pIrx.css"
   ],
   "src/components/ReportDialog.vue?vue&type=script&setup=true&lang.ts": [
-    "/assets/index-D4OIyDIR.js",
+    "/assets/index-C-lONiBU.js",
     "/assets/index-BWs2pIrx.css"
   ],
   "src/main.ts": [],
   "src/pages/index.vue": [
-    "/assets/index-D4OIyDIR.js",
+    "/assets/index-C-lONiBU.js",
     "/assets/index-BWs2pIrx.css"
   ],
   "src/pages/index.vue?vue&type=script&setup=true&lang.ts": [
-    "/assets/index-D4OIyDIR.js",
+    "/assets/index-C-lONiBU.js",
     "/assets/index-BWs2pIrx.css"
   ],
   "src/plugins/long-press.ts": [],
