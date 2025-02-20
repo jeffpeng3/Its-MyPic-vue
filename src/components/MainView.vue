@@ -27,7 +27,11 @@ const updateSearchQuery = (query: string) => {
   });
   filterCards(query);
   const url = new URL(window.location.href);
-  url.searchParams.set('q', query);
+  if (query === "") {
+    url.searchParams.delete('q');
+  } else{
+    url.searchParams.set('q', query);
+  }
   window.history.pushState({}, '', url.toString());
 };
 
