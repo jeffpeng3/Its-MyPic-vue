@@ -26,6 +26,9 @@ const updateSearchQuery = (query: string) => {
     behavior: "smooth",
   });
   filterCards(query);
+  const url = new URL(window.location.href);
+  url.searchParams.set('q', query);
+  window.history.pushState({}, '', url.toString());
 };
 
 import { ref, onMounted, onUnmounted, computed, watch } from "vue";

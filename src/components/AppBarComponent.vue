@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { mdiSortReverseVariant, mdiSortVariant } from "@mdi/js";
 const ascendingBind = computed({ get() { return ascending.value }, set(newValue) { ascending.value = newValue; } });
 const ascending = defineModel('ascending', { type: Boolean, required: true });
@@ -42,4 +42,13 @@ const clearMessage = () => {
   searchQuery.value = "";
   emit('update:searchQuery', searchQuery.value);
 };
+
+onMounted(() => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const q = urlParams.get('q');
+  if (q) {
+    searchQuery.value = q;
+    emit('update:searchQuery', searchQuery.value);
+  }
+});
 </script>
