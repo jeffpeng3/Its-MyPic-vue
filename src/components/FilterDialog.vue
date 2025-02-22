@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import MultiSelect from "./MultiSelect.vue";
 import { useQuery } from "@/stores/states";
 import { mdiTune } from "@mdi/js";
@@ -45,19 +45,39 @@ const cleanFilter = () => {
   mygoFilter.value = [];
   aveMujicaFilter.value = [];
   characterFilter.value = [];
-
-  // console.log('cleanFilter');
 };
 
 const applyFilter = () => {
   query.mygoFilter = mygoFilter.value;
   query.avemujicaFilter = aveMujicaFilter.value;
   query.characterFilter = 0;
+  // for (var i = 0; i < 13; i++) {
+  //   query.characterFilter |= +characterFilter.value.includes(characters[i]) << i;
+  // }
   enable.value = false;
-  // console.log(mygoFilter.value);
-  // console.log(aveMujicaFilter.value);
-  // console.log(characterFilter.value);
-  // console.log('applyFilter');
 };
+
+onMounted(() => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const q = urlParams.get('ep');
+  if (q) {
+    var ep = +q;
+    for (var i = 0; ep && i < 13; i++) {
+      const temp = ep & 1;
+      ep = ep >> 1;
+      if (temp) {
+        mygoFilter.value.push(i + 1);
+      }
+    }
+    for (var i = 0; ep && i < 13; i++) {
+      const temp = ep & 1;
+      ep = ep >> 1;
+      if (temp) {
+        aveMujicaFilter.value.push(i + 1);
+      }
+    }
+    applyFilter();
+  }
+});
 
 </script>

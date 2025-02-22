@@ -18,6 +18,11 @@ import { useReverse, useQuery } from '@/stores/states'
 const reverse = useReverse();
 const query = useQuery();
 
+watch(reverse, () => {
+  cardsData.reverse();
+  filterCards();
+});
+
 watch(query, () => {
   updateSearchQuery();
 });
@@ -35,6 +40,18 @@ const updateSearchQuery = () => {
   } else {
     url.searchParams.set('q', query.query);
   }
+  var ep = 0;
+  for (var i = 1; i < 14; i++) {
+    ep |= +query.mygoFilter.includes(i) << (i - 1);
+  }
+  for (var i = 1; i < 9; i++) {
+    ep |= +query.avemujicaFilter.includes(i) << (i + 12);
+  }
+  if (ep == 0) {
+    url.searchParams.delete('ep');
+  } else {
+    url.searchParams.set('ep', ep.toString());
+  }
   window.history.pushState({}, '', url.toString());
 };
 
@@ -48,12 +65,6 @@ let cardsPerRow = ref(4);
 const calcRows = () => {
   cardsPerRow.value = (1 + Math.floor((window.innerWidth - 320) / 310)) * 8;
 };
-
-
-watch(reverse, () => {
-  cardsData.reverse();
-  filterCards();
-});
 
 const pageProvider = computed(() => {
   const filtered = filteredCards.value;
