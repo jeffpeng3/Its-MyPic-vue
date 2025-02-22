@@ -1,5 +1,5 @@
 {
-  "name": "Its-MyPic-vue",
+  "name": "its-mypic-vue",
   "private": true,
   "type": "module",
   "version": "0.0.0",
@@ -14,7 +14,7 @@
   "dependencies": {
     "core-js": "^3.37.1",
     "opencc-js": "^1.0.5",
-    "roboto-fontface": "*",
+    "pinia": "^3.0.1",
     "vue": "^3.4.31",
     "vue-virtual-scroll-grid": "^1.11.0",
     "vuetify": "^3.7.13"
