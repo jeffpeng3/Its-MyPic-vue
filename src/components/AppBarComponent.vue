@@ -4,43 +4,51 @@
       <div class="text-h5 mx-auto font-weight-bold text-center text-truncate">
         MyGO Mujica 截圖搜尋器
       </div>
-      <v-col class="text-center">
-        <v-text-field v-model="searchQuery" single-line hide-details clearable label="搜尋" variant="outlined"
-          class="short-search" @keyup.enter="emitSearchQuery" @click:clear="clearMessage"
-          @input="debounceEmitSearchQuery" autofocus>
-          <template v-slot:append>
-            <v-icon @click="ascendingBind = !ascendingBind"
-              :icon="ascendingBind ? mdiSortVariant : mdiSortReverseVariant" />
-          </template>
-        </v-text-field>
-      </v-col>
+      <v-row dense class="mt-2">
+        <v-col class="text-center">
+          <v-text-field v-model="searchQuery" single-line hide-details clearable label="搜尋" variant="outlined"
+            class="short-search" @keyup.enter="emitSearchQuery" @click:clear="clearMessage"
+            @input="debounceEmitSearchQuery" autofocus>
+            <template v-slot:append>
+              <v-icon @click="reverse.reverse = !reverse.reverse"
+                :icon="reverse.reverse ? mdiSortVariant : mdiSortReverseVariant">
+              </v-icon>
+            </template>
+            <template v-slot:append-inner>
+              <FilterDialog />
+            </template>
+          </v-text-field>
+        </v-col>
+      </v-row>
     </v-container>
   </v-app-bar>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { mdiSortReverseVariant, mdiSortVariant } from "@mdi/js";
-const ascendingBind = computed({ get() { return ascending.value }, set(newValue) { ascending.value = newValue; } });
-const ascending = defineModel('ascending', { type: Boolean, required: true });
+import { useReverse, useQuery } from "@/stores/states";
 
-const emit = defineEmits(['update:searchQuery']);
-const searchQuery = ref("");
+const reverse = useReverse();
+const query = useQuery();
+
 const debounceTimeout = ref<number>();
+
+const searchQuery = ref("");
 
 const debounceEmitSearchQuery = () => {
   clearTimeout(debounceTimeout.value);
-  debounceTimeout.value = setTimeout(() => emit('update:searchQuery', searchQuery.value), 500);
+  debounceTimeout.value = setTimeout(emitSearchQuery, 500);
 };
 
 const emitSearchQuery = () => {
   clearTimeout(debounceTimeout.value);
-  emit('update:searchQuery', searchQuery.value);
+  query.query = searchQuery.value;
 };
 
 const clearMessage = () => {
   searchQuery.value = "";
-  emit('update:searchQuery', searchQuery.value);
+  query.query = "";
 };
 
 onMounted(() => {
@@ -48,7 +56,7 @@ onMounted(() => {
   const q = urlParams.get('q');
   if (q) {
     searchQuery.value = q;
-    emit('update:searchQuery', searchQuery.value);
+    query.query = q;
   }
 });
 </script>

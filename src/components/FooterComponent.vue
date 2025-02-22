@@ -81,10 +81,15 @@
 import { onMounted, computed, ref } from 'vue';
 import { mdiOpenInNew, mdiCog } from '@mdi/js';
 import { useTheme } from 'vuetify'
+import { useCopyMode } from '@/stores/states';
+
+const copyURLMode = useCopyMode();
+
 const canCopyImage = ref(true);
 const isDarkTheme = computed({ get() { return theme.global.current.value.dark }, set(newValue) { toggleTheme(newValue) } });
-const copyModeBind = computed({ get() { return copyURLMode.value }, set(newValue) { copyURLMode.value = newValue; localStorage.setItem('copyURLMode', newValue.toString()); } });
-const copyURLMode = defineModel('copyUrlMode', { type: Boolean, required: true });
+const copyModeBind = computed({ get() { return copyURLMode.copyMode }, set(newValue) { copyURLMode.copyMode = newValue; localStorage.setItem('copyURLMode', newValue.toString()); } });
+
+// const copyURLMode = defineModel('copyUrlMode', { type: Boolean, required: true });
 const theme = useTheme();
 
 
@@ -113,13 +118,13 @@ onMounted(() => {
   canCopyImage.value = checkCanCopyImage();
 
   if (!canCopyImage.value) {
-    copyURLMode.value = true;
+    copyURLMode.copyMode = true;
   } else if (localStorage.getItem('copyURLMode')) {
-    copyURLMode.value = localStorage.getItem('copyURLMode') === 'true';
+    copyURLMode.copyMode = localStorage.getItem('copyURLMode') === 'true';
   } else {
-    copyURLMode.value = false;
+    copyURLMode.copyMode = false;
   }
-  // console.log(copyURLMode.value);
+  // console.log(copyURLMode.copyMode);
 
   if (localStorage.getItem('darkTheme')) {
     theme.global.name.value = localStorage.getItem('darkTheme') ?? 'dark';
