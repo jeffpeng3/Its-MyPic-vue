@@ -114,7 +114,7 @@ const filterCards = () => {
     filteredCards.value = filted;
   } else {
     const temp: string = converter(query.query.toLowerCase().replace("你", "妳").replace("啊", "阿"));
-    filteredCards.value = cardsData.filter((card) =>
+    filteredCards.value = filted.filter((card) =>
       card.text.toLowerCase().replace("你", "妳").replace("啊", "阿").includes(temp)
     );
   }
