@@ -62,6 +62,9 @@ type CardData = {
   episode: string;
   text: string;
 };
+import { useCopyMode } from '@/stores/states';
+
+const copyURLMode = useCopyMode();
 
 import settings from '../assets/setting.json';
 const props = defineProps({
@@ -71,10 +74,6 @@ const props = defineProps({
   },
   cardData: {
     type: Object as PropType<CardData>,
-    required: true,
-  },
-  preferCopyURL: {
-    type: Boolean,
     required: true,
   },
 });
@@ -127,7 +126,7 @@ const copy = async (longPress: boolean) => {
   }
 
   copyResult.value = false;
-  const preferCopyURL = longPress || props.preferCopyURL;
+  const preferCopyURL = longPress || copyURLMode.copyMode;
   // console.log(preferCopyURL);
   try {
     if (preferCopyURL) {

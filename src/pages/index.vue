@@ -1,5 +1,7 @@
 <template>
-  <MainView />
+  <AppBarComponent />
+  <ResultGrid />
+  <FooterComponent />
 </template>
 
 <script lang="ts" setup>
