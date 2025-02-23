@@ -37,7 +37,6 @@ const calcRows = () => {
 };
 
 const pageProvider = computed(() => {
-  const filtered = filteredCards.value;
   if (typeof window != "undefined") {
     window.scrollTo({
       top: 0,
@@ -45,6 +44,7 @@ const pageProvider = computed(() => {
       behavior: "smooth",
     });
   }
+  const filtered = filteredCards.value;
   const update = reverse.reverse;
   return (page: number, pageSize: number) => {
     const slice = filtered.slice(page * pageSize, (page + 1) * pageSize);
