@@ -1,65 +1,35 @@
 <template>
-  <Grid :length="filteredCards.length ? filteredCards.length : 1" :pageSize="cardsPerRow" :pageProvider="pageProvider"
-    :get-key="getKey" :page-provider-debounce-time="100" class="grid ma-5">
-    <template v-slot:placeholder="{ index, style }">
-      <div class="item" :style="style">{{ filteredCards.length ? "還在GO..." : "" }}</div>
+  <Suspense>
+    <template #default>
+      <Grid :length="filteredCards.length ? filteredCards.length : 1" :pageSize="cardsPerRow"
+        :pageProvider="pageProvider" :get-key="getKey" :page-provider-debounce-time="100" class="grid ma-5">
+        <template v-slot:placeholder="{ index, style }">
+          <div class="item" :style="style">{{ filteredCards.length ? "還在GO..." : "" }}</div>
+        </template>
+        <template v-slot:default="{ item, style, index }">
+          <CardComponent :styles="style" :cardData="item" />
+        </template>
+      </Grid>
     </template>
-    <template v-slot:default="{ item, style, index }">
-      <CardComponent :styles="style" :cardData="item" />
+
+    <template #fallback>
+      <p>Loading...</p>
     </template>
-  </Grid>
+  </Suspense>
 </template>
 
 <script setup lang="ts">
 import CardComponent from "./CardComponent.vue";
 import Grid from "vue-virtual-scroll-grid";
-import { useReverse, useQuery } from '@/stores/states'
+import { useReverse, useData } from '@/stores/states'
+import { ref, onMounted, onUnmounted, computed } from "vue";
+import { storeToRefs } from "pinia";
 
 const reverse = useReverse();
-const query = useQuery();
+const data = useData();
+data.fetchData();
 
-watch(reverse, () => {
-  cardsData.reverse();
-  filterCards();
-});
-
-watch(query, () => {
-  updateSearchQuery();
-});
-
-const updateSearchQuery = () => {
-  window.scrollTo({
-    top: 0,
-    left: 0,
-    behavior: "smooth",
-  });
-  filterCards();
-  const url = new URL(window.location.href);
-  if (query.query === "") {
-    url.searchParams.delete('q');
-  } else {
-    url.searchParams.set('q', query.query);
-  }
-  var ep = 0;
-  for (var i = 1; i < 14; i++) {
-    ep |= +query.mygoFilter.includes(i) << (i - 1);
-  }
-  for (var i = 1; i < 9; i++) {
-    ep |= +query.avemujicaFilter.includes(i) << (i + 12);
-  }
-  if (ep == 0) {
-    url.searchParams.delete('ep');
-  } else {
-    url.searchParams.set('ep', ep.toString());
-  }
-  window.history.pushState({}, '', url.toString());
-};
-
-import { ref, onMounted, onUnmounted, computed, watch } from "vue";
-import rawCardsData from "../assets/data/data.json";
-var cardsData = rawCardsData;
-
-const filteredCards = ref(cardsData);
+const { filteredCards } = storeToRefs(data);
 
 let cardsPerRow = ref(4);
 const calcRows = () => {
@@ -68,6 +38,13 @@ const calcRows = () => {
 
 const pageProvider = computed(() => {
   const filtered = filteredCards.value;
+  if (typeof window != "undefined") {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
+  }
   const update = reverse.reverse;
   return (page: number, pageSize: number) => {
     const slice = filtered.slice(page * pageSize, (page + 1) * pageSize);
@@ -88,48 +65,6 @@ onUnmounted(() => {
   window.removeEventListener("resize", calcRows);
 });
 
-// @ts-ignore
-import { ConverterFactory } from 'opencc-js/core';
-// @ts-ignore
-import cn from 'opencc-js/from/cn';
-// @ts-ignore
-import tw from 'opencc-js/to/tw';
-
-const converter = ConverterFactory(cn, tw);
-var episodeCache = new Map<string, typeof cardsData>();
-
-const filterCards = () => {
-  var filted = cardsData;
-  var episodeFilter = new Set<string>();
-  query.mygoFilter.forEach(element => {
-    if (element < 4) {
-      episodeFilter.add("1-3");
-    } else {
-      episodeFilter.add(`${element}`);
-    }
-  });
-  query.avemujicaFilter.forEach(element => {
-    episodeFilter.add(`ave-${element}`);
-  });
-  if (episodeFilter.size !== 0) {
-    const key = reverse.reverse + Array.from(episodeFilter).join("");
-    if (episodeCache.has(key)) {
-      filted = episodeCache.get(key) ?? [];
-    } else {
-      filted = cardsData.filter((card) => episodeFilter.has(card.episode));
-      episodeCache.set(key, filted);
-    }
-  }
-
-  if (query.query === "") {
-    filteredCards.value = filted;
-  } else {
-    const temp: string = converter(query.query.toLowerCase().replace("你", "妳").replace("啊", "阿"));
-    filteredCards.value = filted.filter((card) =>
-      card.text.toLowerCase().replace("你", "妳").replace("啊", "阿").includes(temp)
-    );
-  }
-};
 </script>
 
 <style scoped>
