@@ -90,8 +90,8 @@ const videoLink = settings.videoLink[session][episodeKey];
 
 const frame_start = props.cardData.frame_start;
 const totalSec = frame_start / 23.976;
-const timestamp = `${Math.floor(totalSec / 60)}:${('0' + Math.round(totalSec % 60)).slice(-2)}`;
-const videoLinkWithTimestamp = `${videoLink}&t=${Math.round(totalSec)}s`;
+const timestamp = `${Math.floor(totalSec / 60)}:${('0' + Math.floor(totalSec % 60)).slice(-2)}`;
+const videoLinkWithTimestamp = `${videoLink}&t=${Math.floor(totalSec)}s`;
 
 // console.log(videoLinkWithTimestamp);
 
